@@ -1,10 +1,10 @@
 package demographic
 
-type Industry struct {
+type DominantSide struct {
 	ID          int    `json:"id" gorm:"column:id"`
 	Description string `json:"description" gorm:"column:description"`
 }
 
-func (Industry) TableName() string {
-	return "industry"
+func (DominantSide) TableName() string {
+	return "dominantside"
 }

@@ -59,7 +59,6 @@ class Patient {
     createdByUser: string = "";
 
     getMerged(data: Object): Patient {
-        console.log("NEW DATA", data);
         const newPatient: Patient = Object.assign(this, data);
         return newPatient;
     }

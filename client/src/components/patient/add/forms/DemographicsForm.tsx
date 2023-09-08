@@ -1,6 +1,6 @@
-import { Col, Form, Row, Stack } from "react-bootstrap";
-import { AddFormWrapper, NewPatientInputTypes } from "./AddPatientModal";
-import { NewPatientInput } from "./NewPatientInput";
+import { Col, Row } from "react-bootstrap";
+import { AddFormWrapper, NewPatientInputTypes } from "../AddPatientModal";
+import { NewPatientInput } from "../NewPatientInput";
 
 const DemographicsForm = () => {
     return (
@@ -31,9 +31,39 @@ const DemographicsForm = () => {
             <Row>
                 <Col>
                     <NewPatientInput
+                        label={"Date of Birth"}
+                        type={NewPatientInputTypes.Date}
+                        dataKey={"dateOfBirth"}
+                    />
+                </Col>
+                <Col>
+                    <NewPatientInput
+                        label={"Marital Status"}
+                        type={NewPatientInputTypes.Select}
+                        dataKey={"maritalStatusID"}
+                    />
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <NewPatientInput
                         label={"Gender"}
-                        type={NewPatientInputTypes.Gender}
+                        type={NewPatientInputTypes.Select}
                         dataKey={"genderID"}
+                    />
+                </Col>
+                <Col>
+                    <NewPatientInput
+                        label={"Dominant Side"}
+                        type={NewPatientInputTypes.Select}
+                        dataKey={"dominantSideID"}
+                    />
+                </Col>
+                <Col>
+                    <NewPatientInput
+                        label={"Occupation Category"}
+                        type={NewPatientInputTypes.Select}
+                        dataKey={"occupationCatID"}
                     />
                 </Col>
             </Row>

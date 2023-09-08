@@ -15,6 +15,9 @@ func AddDemographicRoutes(router *gin.Engine) {
 	router.GET("/demographic/occupation", getOccupations)
 	router.GET("/demographic/country", getCountries)
 	router.GET("/demographic/industry", getIndustries)
+	router.GET("/demographic/dominantside", getDominantSides)
+	router.GET("/demographic/occupationcat", getOccupationCats)
+	router.GET("/demographic/maritalstatus", getMaritalStatuses)
 }
 
 func getGenders(c *gin.Context) {
@@ -31,7 +34,7 @@ func getEthnicities(c *gin.Context) {
 
 func getIndustries(c *gin.Context) {
 	var industries []dm.Industry
-	database.Store.Find(&industries)
+	database.Store.Order("UPPER(description) ASC").Find(&industries)
 	c.JSON(http.StatusOK, industries)
 }
 
@@ -48,13 +51,14 @@ func getOccupations(c *gin.Context) {
 	}
 
 	// Query industry filtered occupations
-	if q == "" {
-		occupsTable.Find(&occupations)
-	} else {
+	var resultsTable *gorm.DB = occupsTable
+	if q != "" {
 		wildcardToken := "%" + q + "%"
 		query := "UPPER(description) LIKE UPPER(?)"
-		occupsTable.Where(query, wildcardToken).Find(&occupations)
+		resultsTable = resultsTable.Where(query, wildcardToken)
 	}
+	resultsTable.Order("UPPER(description) ASC")
+	resultsTable.Find(&occupations)
 	c.JSON(http.StatusOK, occupations)
 }
 
@@ -70,4 +74,21 @@ func getCountries(c *gin.Context) {
 		database.Store.Where(query, wildcardToken).Find(&countries)
 	}
 	c.JSON(http.StatusOK, countries)
+}
+
+func getDominantSides(c *gin.Context) {
+	var dominantSides []dm.DominantSide
+	database.Store.Find(&dominantSides)
+	c.JSON(http.StatusOK, dominantSides)
+}
+
+func getOccupationCats(c *gin.Context) {
+	var occupationCats []dm.OccupationCat
+	database.Store.Find(&occupationCats)
+	c.JSON(http.StatusOK, occupationCats)
+}
+func getMaritalStatuses(c *gin.Context) {
+	var maritalStatuses []dm.MaritalStatus
+	database.Store.Find(&maritalStatuses)
+	c.JSON(http.StatusOK, maritalStatuses)
 }

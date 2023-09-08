@@ -1,12 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Patient from "../../models/patient";
-import { Gender } from "../../services/demographics_services";
+import {
+    DominantSide,
+    Gender,
+    Industry,
+    MaritalStatus,
+    OccupationCat,
+} from "../../services/demographics_services";
 
 export interface PatientInitialState {
     showAddPatient: boolean;
     addPatientEventKey: string;
     newPatient: string;
     patientGenders: Gender[];
+    patientDominantSides: DominantSide[];
+    patientOccupationCats: OccupationCat[];
+    patientMaritalStatuses: MaritalStatus[];
+    patientIndustries: Industry[];
+    selectedOccupationID: number;
 }
 
 const initialState: PatientInitialState = {
@@ -14,6 +25,11 @@ const initialState: PatientInitialState = {
     addPatientEventKey: "",
     newPatient: JSON.stringify(new Patient()),
     patientGenders: [],
+    patientDominantSides: [],
+    patientOccupationCats: [],
+    patientMaritalStatuses: [],
+    patientIndustries: [],
+    selectedOccupationID: -1,
 };
 
 export const patientSlice = createSlice({
@@ -32,12 +48,35 @@ export const patientSlice = createSlice({
         setAddPatientEventKey: (state, action: PayloadAction<string>) => {
             state.addPatientEventKey = action.payload;
         },
+        setSelectedOccupationID: (state, action: PayloadAction<number>) => {
+            state.selectedOccupationID = action.payload;
+        },
+        setPatientDominantSides: (
+            state,
+            action: PayloadAction<DominantSide[]>
+        ) => {
+            state.patientDominantSides = action.payload;
+        },
+        setPatientOccupationCats: (
+            state,
+            action: PayloadAction<OccupationCat[]>
+        ) => {
+            state.patientOccupationCats = action.payload;
+        },
+        setPatientMaritalStatuses: (
+            state,
+            action: PayloadAction<MaritalStatus[]>
+        ) => {
+            state.patientMaritalStatuses = action.payload;
+        },
+        setPatientIndustries: (state, action: PayloadAction<Industry[]>) => {
+            state.patientIndustries = action.payload;
+        },
         setPatientGenders: (state, action: PayloadAction<Gender[]>) => {
             state.patientGenders = action.payload;
         },
         updateNewPatient: (state, action: PayloadAction<Object>) => {
             const deserializedPatient = JSON.parse(state.newPatient);
-            console.log(action);
             Object.assign(deserializedPatient, action.payload);
             state.newPatient = JSON.stringify(deserializedPatient);
         },
@@ -55,5 +94,10 @@ export const {
     openAddPatient,
     updateNewPatient,
     setPatientGenders,
+    setPatientDominantSides,
+    setPatientOccupationCats,
+    setPatientMaritalStatuses,
+    setPatientIndustries,
+    setSelectedOccupationID,
 } = patientSlice.actions;
 export default patientSlice.reducer;

@@ -1,13 +1,36 @@
-.form-control, .form-select {
+div.react-datepicker__input-container > input {
+
+    padding: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+div.react-datepicker-wrapper{
+    display: block;
+}
+
+div.react-datepicker__triangle {
+    display: none !important;
+}
+div.react-datepicker {
+    margin-top: -4px;
+
+}
+ div.react-datepicker__input-container > input {
+    width: 100% !important;
+ }
+.form-control, .form-select, div.react-datepicker__input-container > input {
+    border-width: 2px;
     border-radius: 0px;
     font-size: 14px;
     border-color: rgba(0,0,0,.1);
+    transition:  .15s ease-in-out,box-shadow .15s ease-in-out;
     
 }
 .form-control:hover, .form-select:hover {
     cursor: text !important;
 }
-.form-control:focus, .form-select:focus{
+.form-control:focus, .form-select:focus, div.react-datepicker__input-container > input:focus{
     border-color: rgba(114, 98, 170, .4);
     outline: 0;
     box-shadow: 0 0 0 0.15rem hsl(250, 21%, 78%);

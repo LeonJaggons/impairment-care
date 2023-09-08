@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
 import { updateNewPatient } from "../../../redux/reducers/patientReducer";
-import { Gender } from "../../../services/demographics_services";
 import { NewPatientInputTypes } from "./AddPatientModal";
+import DatePicker from "react-datepicker";
 
 export const NewPatientInput = (props: {
     label?: string;
@@ -17,7 +17,7 @@ export const NewPatientInput = (props: {
         (state: any) => state.patient.showAddPatient
     );
 
-    const [value, setValue] = useState<any>();
+    const [value, setValue] = useState<any>("");
 
     const updateValue = (patientStrData: string) => {
         if (!props.dataKey) return;
@@ -31,15 +31,17 @@ export const NewPatientInput = (props: {
 
     const handleChange = (e: any) => {
         if (!props.dataKey) return;
-        console.log(e.target.value);
         let newValue = { [props.dataKey]: e };
-        if (e.target) {
-            newValue[props.dataKey] = e.target.value;
-            if (e.target.checked) {
-                newValue[props.dataKey] = e.target.checked;
-            }
+        switch (props.type) {
+            case NewPatientInputTypes.Text:
+            case NewPatientInputTypes.Select:
+                newValue[props.dataKey] = e.target.value;
+                break;
+            case NewPatientInputTypes.Date:
+                const newDate: Date = e;
+                newValue[props.dataKey] = newDate.toISOString();
+                break;
         }
-        console.log("NEW VALUE", newValue);
         dispatch(updateNewPatient(newValue));
     };
 
@@ -52,9 +54,18 @@ export const NewPatientInput = (props: {
                         value={value}
                     />
                 );
-            case NewPatientInputTypes.Gender:
+            case NewPatientInputTypes.Select:
                 return (
-                    <NewPatientGenderInput
+                    <NewPatientSelectInput
+                        handleChange={handleChange}
+                        value={value}
+                        dataKey={props.dataKey}
+                    />
+                );
+
+            case NewPatientInputTypes.Date:
+                return (
+                    <NewPatientDateInput
                         handleChange={handleChange}
                         value={value}
                     />
@@ -73,6 +84,7 @@ export const NewPatientInput = (props: {
         </div>
     );
 };
+
 const NewPatientTextInput = (props: { handleChange: any; value: any }) => {
     return (
         <Form.Control
@@ -81,23 +93,64 @@ const NewPatientTextInput = (props: { handleChange: any; value: any }) => {
         ></Form.Control>
     );
 };
-const NewPatientGenderInput = (props: { handleChange: any; value: any }) => {
-    const [genders, setGenders] = useState<Gender[]>([]);
-    const patientGenders = useSelector(
-        (state: any) => state.patient.patientGenders
-    );
+
+const NewPatientSelectInput = (props: {
+    handleChange: any;
+    value: any;
+    dataKey?: string;
+}) => {
+    const [options, setOptions] = useState<any[]>([]);
+    const stateOptions = useSelector((state: any) => {
+        switch (props.dataKey) {
+            case "genderID":
+                return state.patient.patientGenders;
+            case "dominantSideID":
+                return state.patient.patientDominantSides;
+            case "occupationCatID":
+                return state.patient.patientOccupationCats;
+            case "maritalStatusID":
+                return state.patient.patientMaritalStatuses;
+            case "industryID":
+                return state.patient.patientIndustries;
+            default:
+                return [];
+        }
+    });
     useEffect(() => {
-        setGenders(patientGenders);
-    }, [patientGenders]);
+        setOptions(stateOptions);
+    }, [stateOptions]);
     return (
         <>
-            <Form.Select onChange={props.handleChange} value={props.value}>
-                {genders.map((gender) => (
-                    <option key={"GENDER-ID-" + gender.id} value={gender.id}>
-                        {gender.description}
+            <Form.Select
+                onChange={props.handleChange}
+                value={props.value ? props.value : 0}
+            >
+                {options.map((opt) => (
+                    <option
+                        key={props.dataKey + "-ID-" + opt.id}
+                        value={opt.id}
+                    >
+                        {opt.description}
                     </option>
                 ))}
             </Form.Select>
+        </>
+    );
+};
+
+const NewPatientDateInput = (props: { handleChange: any; value: any }) => {
+    return (
+        <>
+            <Row>
+                <Col>
+                    <DatePicker
+                        selected={
+                            props.value ? new Date(props.value) : new Date()
+                        }
+                        onChange={props.handleChange}
+                    />
+                </Col>
+            </Row>
         </>
     );
 };

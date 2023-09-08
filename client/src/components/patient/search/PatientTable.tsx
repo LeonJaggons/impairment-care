@@ -56,7 +56,7 @@ const PatientTableHeader = (props: { headers: PatientTableHeader[] }) => {
         <thead>
             <tr>
                 {props.headers.map((header) => (
-                    <th>{header.label}</th>
+                    <th key={"HEADER-" + header.dataKey}>{header.label}</th>
                 ))}
                 <th>
                     <AddPatientButton />

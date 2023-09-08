@@ -11,15 +11,26 @@ import {
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
 import { closeAddPatient } from "../../../redux/reducers/patientReducer";
-import DemographicsForm from "./DemographicsForm";
-import { loadGenders } from "../../../services/demographics_services";
+import DemographicsForm from "./forms/DemographicsForm";
+import {
+    loadGenders,
+    loadDominantSides,
+    loadOccupationCats,
+    loadMaritalStatuses,
+    loadIndustries,
+} from "../../../services/demographics_services";
+import CaliforniaForm from "./forms/CaliforniaForm";
 
 const patientTabForms: PatientTabForm[] = [
     { title: "Demographics", eventKey: "demo", element: <DemographicsForm /> },
     { title: "Contact", eventKey: "contact", element: <></> },
     { title: "Location", eventKey: "location", element: <></> },
     { title: "Claim Details", eventKey: "claim", element: <></> },
-    { title: "California Specific", eventKey: "california", element: <></> },
+    {
+        title: "California Specific",
+        eventKey: "california",
+        element: <CaliforniaForm />,
+    },
 ];
 
 const AddPatientModal = () => {
@@ -28,6 +39,10 @@ const AddPatientModal = () => {
 
     const loadSelectData = async () => {
         await loadGenders();
+        await loadDominantSides();
+        await loadOccupationCats();
+        await loadMaritalStatuses();
+        await loadIndustries();
     };
     useEffect(() => {
         loadSelectData();
@@ -86,7 +101,8 @@ const AddPatientNavigation = (props: { tabs: PatientTabForm[] }) => {
 
 export enum NewPatientInputTypes {
     Text,
-    Gender,
+    Date,
+    Select,
 }
 
 export const AddFormWrapper = (props: { children: any }) => {
