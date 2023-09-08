@@ -1,0 +1,91 @@
+.form-control, .form-select {
+    border-radius: 0px;
+    font-size: 14px;
+    border-color: rgba(0,0,0,.1);
+    
+}
+.form-control:hover, .form-select:hover {
+    cursor: text !important;
+}
+.form-control:focus, .form-select:focus{
+    border-color: rgba(114, 98, 170, .4);
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem hsl(250, 21%, 78%);
+}
+
+.btn {
+    border-radius: 0px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #7262aa;
+    border-color: rgba(114, 98, 170, .4) !important;
+}
+.btn-outline-primary {
+    color: #7262aa;
+    background-color: white !important;
+    border-color: rgba(114, 98, 170, .4) !important;
+}
+.btn-outline-primary:focus {
+    background-color: transparent !important;
+}
+.btn-outline-primary:active {
+    background-color: #7262aa !important;
+    border-color: rgba(114, 98, 170, .4) !important;
+}
+.btn-outline-primary:hover {
+    background-color: #7262aa !important;
+    border-color: rgba(114, 98, 170, .4) !important;
+}
+.btn-primary:active {
+    background-color: rgba(114, 98, 170, .6) !important;
+    border-color: rgba(114, 98, 170, .4) !important;
+}
+.btn-primary:focus{
+    background-color: #7262aa;
+    border-color: rgba(114, 98, 170, .4) !important;
+    box-shadow: 0 0 0 0.15rem hsl(250, 21%, 78%);
+}
+.nav-link {
+    color: #7262aa;
+    border-radius: 0px !important;
+    font-size: 14px;
+    cursor: pointer !important;
+    user-select: none;
+}
+.nav-link:hover {
+    color: #7262aa;
+}
+.nav-link.active{
+    background-color: #7262aa !important;
+    color: white !important;
+    border-style: solid !important;
+    border-color: #dee2e6 !important;
+    border-width: 1px !important;
+}
+
+.tab-content {
+    min-height: 200px;
+    padding: 18px;
+    border-style: solid;
+    border-color: #dee2e6;
+    border-width: 1px;
+    border-top: none;
+}
+
+.modal-title {
+    font-size: 20px;
+}
+.modal-content {
+    border-radius: 0px;
+}
+
+.modal-footer {
+    border-radius:0px;
+    /* background-color: #f8fafc; */
+}
+td{
+    vertical-align: middle !important;
+
+}

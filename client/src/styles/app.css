@@ -1,0 +1,43 @@
+
+body {
+overscroll-behavior-y:none;
+}
+#app-container {
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#app-header {
+    background-color: rgb(114, 98, 170);
+    padding: 12px;
+    padding-left: 18px;
+    padding-right: 18px;
+
+}
+
+#app-header > * {
+    color : rgba(255,255,255,.9);
+    margin: 0px;
+}
+
+#app-content {
+    flex: 1;
+    background-color: #f8fafc;
+}
+
+#app-footer {
+    background-color: #211748;
+    padding-top:8px;
+    padding-bottom:8px;
+}
+
+#app-footer > * {
+    margin: 0px;
+    color: rgba(255,255,255,.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size:12px;
+}
+
