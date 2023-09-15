@@ -20,4 +20,5 @@ func StartServer() {
 func ConfigureRoutes(r *gin.Engine) {
 	pc.AddPatientRoutes(r)
 	pc.AddDemographicRoutes(r)
+	pc.AddImpairmentRoutes(r)
 }

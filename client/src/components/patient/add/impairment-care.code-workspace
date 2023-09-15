@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "impairment-care",
+			"path": "../../../../.."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true
+	}
+}
