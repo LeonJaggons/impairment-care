@@ -13,7 +13,7 @@ var defaultConfig PGConfig = PGConfig{
 	host:     "localhost",
 	port:     5432,
 	user:     "postgres",
-	password: "Orbit101!",
+	password: "Orbit",
 	dbname:   "ic",
 }
 
