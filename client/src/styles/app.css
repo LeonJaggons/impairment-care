@@ -13,6 +13,10 @@ overscroll-behavior-y:none;
     padding: 12px;
     padding-left: 18px;
     padding-right: 18px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
 
 }
 
@@ -21,6 +25,12 @@ overscroll-behavior-y:none;
     margin: 0px;
 }
 
+.ic-nav-item {
+    color: white !important;
+}
+.ic-nav-item:hover{
+    color: rgba(255, 255,255,.6) !important;
+}
 #app-content {
     flex: 1;
     background-color: #f8fafc;

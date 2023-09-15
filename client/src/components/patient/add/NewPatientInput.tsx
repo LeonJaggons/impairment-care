@@ -112,6 +112,8 @@ const NewPatientSelectInput = (props: {
                 return state.patient.patientMaritalStatuses;
             case "industryID":
                 return state.patient.patientIndustries;
+            case "editionID":
+                return state.patient.patientEditions;
             default:
                 return [];
         }
@@ -123,7 +125,7 @@ const NewPatientSelectInput = (props: {
         <>
             <Form.Select
                 onChange={props.handleChange}
-                value={props.value ? props.value : 0}
+                value={props.value ? parseInt(props.value) : 0}
             >
                 {options.map((opt) => (
                     <option

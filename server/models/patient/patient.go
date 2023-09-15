@@ -3,19 +3,18 @@ package patient
 import "time"
 
 type Patient struct {
-	ID int `json:"id" gorm:"column:id"`
-	// PatientId             string    `json:"patientID" gorm:"column:patientid"`
+	ID                    int       `json:"id,string" gorm:"column:id"`
 	MedicalRecordNumber   string    `json:"medicalRecordNumber" gorm:"column:medicalrecordnumber"`
-	DominantSideId        int       `json:"dominantSideID" gorm:"column:dominantsideid"`
-	ActivityLevelId       int       `json:"activityLevelID" gorm:"column:activitylevelid"`
-	BirthCountryId        int       `json:"birthCountryID" gorm:"column:birthcountryid"`
-	GenderId              int       `json:"genderID" gorm:"column:genderid"`
-	MaritalId             int       `json:"maritalID" gorm:"column:maritalid"`
-	LanguageId            int       `json:"languageID" gorm:"column:languageid"`
-	EthnicityId           int       `json:"ethnicityID" gorm:"column:ethnicityid"`
-	SuffixId              int       `json:"suffixID" gorm:"column:suffixid"`
+	DominantSideId        int       `json:"dominantSideID,string" gorm:"column:dominantsideid"`
+	ActivityLevelId       int       `json:"activityLevelID,string" gorm:"column:activitylevelid"`
+	BirthCountryId        int       `json:"birthCountryID,string" gorm:"column:birthcountryid"`
+	GenderId              int       `json:"genderID,string" gorm:"column:genderid"`
+	MaritalId             int       `json:"maritalID,string" gorm:"column:maritalid"`
+	LanguageId            int       `json:"languageID,string" gorm:"column:languageid"`
+	EthnicityId           int       `json:"ethnicityID,string" gorm:"column:ethnicityid"`
+	SuffixId              int       `json:"suffixID,string" gorm:"column:suffixid"`
 	MiddleName            string    `json:"middleName" gorm:"column:middlename"`
-	NamePrefixId          int       `json:"namePrefixID" gorm:"column:nameprefixid"`
+	NamePrefixId          int       `json:"namePrefixID,string" gorm:"column:nameprefixid"`
 	LastName              string    `json:"lastName" gorm:"column:lastname"`
 	FirstName             string    `json:"firstName" gorm:"column:firstname"`
 	DateOfBirth           time.Time `json:"dateOfBirth" gorm:"column:dateofbirth"`
@@ -26,24 +25,24 @@ type Patient struct {
 	Zip                   string    `json:"zip" gorm:"column:zip"`
 	SocialSecurityNumber  string    `json:"socialSecurityNumber" gorm:"column:socialsecuritynumber"`
 	DayPhone              string    `json:"dayPhone" gorm:"column:dayphone"`
-	CountryId             int       `json:"countryID" gorm:"column:countryid"`
+	CountryId             int       `json:"countryID,string" gorm:"column:countryid"`
 	EveningPhone          string    `json:"eveningPhone" gorm:"column:eveningphone"`
 	Fax                   string    `json:"fax" gorm:"column:fax"`
 	Height                int       `json:"height" gorm:"column:height"`
 	Weight                int       `json:"weight" gorm:"column:weight"`
 	HeartRate             int       `json:"heartRate" gorm:"column:heartrate"`
-	LivingConditionId     int       `json:"livingConditionID" gorm:"column:livingconditionid"`
-	AssistedLivingId      int       `json:"assistedLivingID" gorm:"column:assistedlivingid"`
-	SocialSecurityId      int       `json:"socialSecurityID" gorm:"column:socialsecurityid"`
-	DisabilityId          int       `json:"disabilityID" gorm:"column:disabilityid"`
-	WorkersCompensationId int       `json:"workersCompensationID" gorm:"column:workerscompensationid"`
-	SmokerId              int       `json:"smokerID" gorm:"column:smokerid"`
+	LivingConditionId     int       `json:"livingConditionID,string" gorm:"column:livingconditionid"`
+	AssistedLivingId      int       `json:"assistedLivingID,string" gorm:"column:assistedlivingid"`
+	SocialSecurityId      int       `json:"socialSecurityID,string" gorm:"column:socialsecurityid"`
+	DisabilityId          int       `json:"disabilityID,string" gorm:"column:disabilityid"`
+	WorkersCompensationId int       `json:"workersCompensationID,string" gorm:"column:workerscompensationid"`
+	SmokerId              int       `json:"smokerID,string" gorm:"column:smokerid"`
 	LastEditedBy          string    `json:"lastEditedBy" gorm:"column:lasteditedby"`
 	LastEditedOn          time.Time `json:"lastEditedOn" gorm:"column:lasteditedon"`
 	CreatedBy             string    `json:"createdBy" gorm:"column:createdby"`
 	CreatedOn             time.Time `json:"createdOn" gorm:"column:createdon"`
 	BloodPressure         string    `json:"bloodPressure" gorm:"column:bloodpressure"`
-	AlternateID           string    `json:"alternateID" gorm:"column:alternateid"`
+	AlternateID           int       `json:"alternateID,string" gorm:"column:alternateid"`
 	County                string    `json:"county" gorm:"column:county"`
 	PatientText           string    `json:"patientText" gorm:"column:patienttext"`
 	DateOfExam            time.Time `json:"dateOfExam" gorm:"column:dateofexam"`
@@ -51,14 +50,14 @@ type Patient struct {
 	OccupationCodePD      string    `json:"occupationCodePD" gorm:"column:occupationcodepd"`
 	OccupationNamePD      string    `json:"occupationNamePD" gorm:"column:occupationnamepd"`
 	AvgWeeklyEarningPD    float32   `json:"avgWeeklyEarningPD" gorm:"column:avgweeklyearningpd"`
-	OccupationCat         int       `json:"occupationCat" gorm:"column:occupationcat"`
-	InsuranceId           int       `json:"insuranceID" gorm:"column:insuranceid"`
+	OccupationCatId       int       `json:"occupationCatID,string" gorm:"column:occupationcatid"`
+	InsuranceId           int       `json:"insuranceID,string" gorm:"column:insuranceid"`
 	ClaimNumber           string    `json:"claimNumber" gorm:"column:claimnumber"`
 	ClaimAdjuster         string    `json:"claimAdjuster" gorm:"column:claimadjuster"`
-	EmployerId            int       `json:"employerID" gorm:"column:employerid"`
-	LawyerID              int       `json:"lawyerID" gorm:"column:lawyerid"`
-	EducationID           int       `json:"educationID" gorm:"column:educationid"`
-	TreatingPhysicianId   int       `json:"treatingPhysicianID" gorm:"column:treatingphysicianid"`
+	EmployerId            int       `json:"employerID,string" gorm:"column:employerid"`
+	LawyerID              int       `json:"lawyerID,string" gorm:"column:lawyerid"`
+	EducationID           int       `json:"educationID,string" gorm:"column:educationid"`
+	TreatingPhysicianId   int       `json:"treatingPhysicianID,string" gorm:"column:treatingphysicianid"`
 	DateOfMMI             time.Time `json:"dateOfMMI" gorm:"column:dateofmmi"`
 	IsFourthEdition       int       `json:"isFourthEdition" gorm:"column:isfourthedition"`
 	CreatedDate           time.Time `json:"createdDate" gorm:"column:createddate"`

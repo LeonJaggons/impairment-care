@@ -87,6 +87,7 @@ func getOccupationCats(c *gin.Context) {
 	database.Store.Find(&occupationCats)
 	c.JSON(http.StatusOK, occupationCats)
 }
+
 func getMaritalStatuses(c *gin.Context) {
 	var maritalStatuses []dm.MaritalStatus
 	database.Store.Find(&maritalStatuses)

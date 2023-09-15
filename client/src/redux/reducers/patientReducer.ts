@@ -7,9 +7,12 @@ import {
     MaritalStatus,
     OccupationCat,
 } from "../../services/demographics_services";
+import { Edition } from "../../services/impairment_services";
+import { Visit } from "../../services/patient_services";
 
 export interface PatientInitialState {
     showAddPatient: boolean;
+    showPatientVisits: boolean;
     addPatientEventKey: string;
     newPatient: string;
     patientGenders: Gender[];
@@ -17,11 +20,15 @@ export interface PatientInitialState {
     patientOccupationCats: OccupationCat[];
     patientMaritalStatuses: MaritalStatus[];
     patientIndustries: Industry[];
+    patientEditions: Edition[];
     selectedOccupationID: number;
+    visitTab: string;
+    selectedVisit?: Visit;
 }
 
 const initialState: PatientInitialState = {
     showAddPatient: false,
+    showPatientVisits: false,
     addPatientEventKey: "",
     newPatient: JSON.stringify(new Patient()),
     patientGenders: [],
@@ -29,7 +36,10 @@ const initialState: PatientInitialState = {
     patientOccupationCats: [],
     patientMaritalStatuses: [],
     patientIndustries: [],
+    patientEditions: [],
     selectedOccupationID: -1,
+    visitTab: "VISIT-TABLE",
+    selectedVisit: undefined,
 };
 
 export const patientSlice = createSlice({
@@ -44,6 +54,21 @@ export const patientSlice = createSlice({
         },
         closeAddPatient: (state) => {
             state.showAddPatient = false;
+        },
+        togglePatientVisits: (state) => {
+            state.showPatientVisits = !state.showAddPatient;
+        },
+        openPatientVisits: (state) => {
+            state.showPatientVisits = true;
+        },
+        closePatientVisits: (state) => {
+            state.showPatientVisits = false;
+        },
+        setSelectedVisit: (state, action: PayloadAction<Visit>) => {
+            state.selectedVisit = action.payload;
+        },
+        setVisitTab: (state, action: PayloadAction<string>) => {
+            state.visitTab = action.payload;
         },
         setAddPatientEventKey: (state, action: PayloadAction<string>) => {
             state.addPatientEventKey = action.payload;
@@ -72,6 +97,9 @@ export const patientSlice = createSlice({
         setPatientIndustries: (state, action: PayloadAction<Industry[]>) => {
             state.patientIndustries = action.payload;
         },
+        setPatientEditions: (state, action: PayloadAction<Edition[]>) => {
+            state.patientEditions = action.payload;
+        },
         setPatientGenders: (state, action: PayloadAction<Gender[]>) => {
             state.patientGenders = action.payload;
         },
@@ -92,6 +120,9 @@ export const {
     toggleAddPatient,
     closeAddPatient,
     openAddPatient,
+    togglePatientVisits,
+    openPatientVisits,
+    closePatientVisits,
     updateNewPatient,
     setPatientGenders,
     setPatientDominantSides,
@@ -99,5 +130,9 @@ export const {
     setPatientMaritalStatuses,
     setPatientIndustries,
     setSelectedOccupationID,
+    setPatientEditions,
+    clearNewPatient,
+    setVisitTab,
+    setSelectedVisit,
 } = patientSlice.actions;
 export default patientSlice.reducer;

@@ -10,7 +10,10 @@ import {
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
-import { closeAddPatient } from "../../../redux/reducers/patientReducer";
+import {
+    clearNewPatient,
+    closeAddPatient,
+} from "../../../redux/reducers/patientReducer";
 import DemographicsForm from "./forms/DemographicsForm";
 import {
     loadGenders,
@@ -20,6 +23,8 @@ import {
     loadIndustries,
 } from "../../../services/demographics_services";
 import CaliforniaForm from "./forms/CaliforniaForm";
+import { loadEditions } from "../../../services/impairment_services";
+import { addNewPatient } from "../../../services/patient_services";
 
 const patientTabForms: PatientTabForm[] = [
     { title: "Demographics", eventKey: "demo", element: <DemographicsForm /> },
@@ -43,13 +48,11 @@ const AddPatientModal = () => {
         await loadOccupationCats();
         await loadMaritalStatuses();
         await loadIndustries();
+        await loadEditions();
     };
     useEffect(() => {
         loadSelectData();
     }, []);
-    useEffect(() => {
-        // console.table(JSON.parse(newPatient));
-    }, [newPatient]);
 
     const showAddPatient = useSelector(
         (state: any) => state.patient.showAddPatient
@@ -59,6 +62,9 @@ const AddPatientModal = () => {
         dispatch(closeAddPatient());
     };
 
+    const handleAddPatient = async () => {
+        await addNewPatient();
+    };
     return (
         <Modal show={showAddPatient} centered size={"xl"}>
             <Modal.Header>
@@ -67,7 +73,11 @@ const AddPatientModal = () => {
             </Modal.Header>
             <AddPatientNavigation tabs={patientTabForms} />
             <Modal.Footer>
-                <Button style={{ width: "100%" }} variant="outline-primary">
+                <Button
+                    style={{ width: "100%" }}
+                    variant="outline-primary"
+                    onClick={handleAddPatient}
+                >
                     Review
                 </Button>
             </Modal.Footer>

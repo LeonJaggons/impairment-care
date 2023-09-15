@@ -51,7 +51,6 @@ export const OccupationTable = () => {
         setLoading(true);
         const newOccupations = await getOccupations(industryID);
         setOccupations(newOccupations);
-        console.log(selectedIndustry);
         dispatch(setSelectedOccupationID(-1));
         setLoading(false);
     };

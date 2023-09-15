@@ -11,3 +11,9 @@ export const API_DOMINANT_SIDE = joinAPIURL(["demographic", "dominantside"]);
 export const API_OCCUPATION_CAT = joinAPIURL(["demographic", "occupationcat"]);
 export const API_MARITAL_STATUS = joinAPIURL(["demographic", "maritalstatus"]);
 export const API_INDUSTRY = joinAPIURL(["demographic", "industry"]);
+
+export const API_EDITION = joinAPIURL(["impairment", "edition"]);
+export const API_CHAPTER = joinAPIURL(["impairment", "chapter"]);
+
+export const API_PATIENT = joinAPIURL(["patient"]);
+export const API_VISIT = joinAPIURL(["patient", "visit"]);

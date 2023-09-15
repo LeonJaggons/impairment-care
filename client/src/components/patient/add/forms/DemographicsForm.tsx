@@ -83,6 +83,15 @@ const DemographicsForm = () => {
                     />
                 </Col>
             </Row>
+            <Row>
+                <Col>
+                    <NewPatientInput
+                        label={"Impairment Edition"}
+                        type={NewPatientInputTypes.Select}
+                        dataKey={"editionID"}
+                    />
+                </Col>
+            </Row>
         </AddFormWrapper>
     );
 };

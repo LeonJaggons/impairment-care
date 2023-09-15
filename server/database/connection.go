@@ -38,6 +38,7 @@ func OpenConnection() *gorm.DB {
 	if err != nil {
 		log.Panic(err)
 	}
+	db.Debug()
 	return db
 }
 
