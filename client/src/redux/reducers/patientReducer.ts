@@ -24,6 +24,7 @@ export interface PatientInitialState {
     selectedOccupationID: number;
     visitTab: string;
     selectedVisit?: Visit;
+    patientImpairment: any;
 }
 
 const initialState: PatientInitialState = {
@@ -40,6 +41,7 @@ const initialState: PatientInitialState = {
     selectedOccupationID: -1,
     visitTab: "VISIT-TABLE",
     selectedVisit: undefined,
+    patientImpairment: [],
 };
 
 export const patientSlice = createSlice({
@@ -113,6 +115,9 @@ export const patientSlice = createSlice({
             const serializedNewPatient = JSON.stringify(clearPatient);
             state.newPatient = serializedNewPatient;
         },
+        setPatientImpairment: (state, action: PayloadAction<any>) => {
+            state.patientImpairment = action.payload;
+        },
     },
 });
 
@@ -134,5 +139,6 @@ export const {
     clearNewPatient,
     setVisitTab,
     setSelectedVisit,
+    setPatientImpairment,
 } = patientSlice.actions;
 export default patientSlice.reducer;

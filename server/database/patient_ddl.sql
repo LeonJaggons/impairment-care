@@ -1,18 +1,18 @@
 -- Visit definition
-DROP TABLE Visit;
+DROP TABLE IF EXISTS Visit;
 
 CREATE TABLE Visit (
 	ID SERIAL primary key,
 	PatientId INTEGER,
 	VisitDate TIMESTAMP,
-	VisitName VARCHAR(255),
+	VisitDescription VARCHAR(255),
 	DefaultChapterID INTEGER
 );
 
 select * from visit;
 ---
 
-drop table chapter;
+drop TABLE IF exists chapter;
 -- Chapter Definition
 CREATE TABLE Chapter (
 	ID SERIAL primary key,

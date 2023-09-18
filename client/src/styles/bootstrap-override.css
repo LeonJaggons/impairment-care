@@ -1,11 +1,10 @@
 div.react-datepicker__input-container > input {
-
     padding: 12px;
     padding-top: 6px;
     padding-bottom: 6px;
 }
 
-div.react-datepicker-wrapper{
+div.react-datepicker-wrapper {
     display: block;
 }
 
@@ -14,24 +13,27 @@ div.react-datepicker__triangle {
 }
 div.react-datepicker {
     margin-top: -4px;
-
 }
- div.react-datepicker__input-container > input {
+div.react-datepicker__input-container > input {
     width: 100% !important;
- }
-.form-control, .form-select, div.react-datepicker__input-container > input {
+}
+.form-control,
+.form-select,
+div.react-datepicker__input-container > input {
     border-width: 2px;
     border-radius: 0px;
     font-size: 14px;
-    border-color: rgba(0,0,0,.1);
-    transition:  .15s ease-in-out,box-shadow .15s ease-in-out;
-    
+    border-color: rgba(0, 0, 0, 0.1);
+    transition: 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-.form-control:hover, .form-select:hover {
+.form-control:hover,
+.form-select:hover {
     cursor: text !important;
 }
-.form-control:focus, .form-select:focus, div.react-datepicker__input-container > input:focus{
-    border-color: rgba(114, 98, 170, .4);
+.form-control:focus,
+.form-select:focus,
+div.react-datepicker__input-container > input:focus {
+    border-color: rgba(114, 98, 170, 0.4);
     outline: 0;
     box-shadow: 0 0 0 0.15rem hsl(250, 21%, 78%);
 }
@@ -43,31 +45,31 @@ div.react-datepicker {
 
 .btn-primary {
     background-color: #7262aa;
-    border-color: rgba(114, 98, 170, .4) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
 }
 .btn-outline-primary {
     color: #7262aa;
     background-color: white !important;
-    border-color: rgba(114, 98, 170, .4) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
 }
 .btn-outline-primary:focus {
     background-color: transparent !important;
 }
 .btn-outline-primary:active {
     background-color: #7262aa !important;
-    border-color: rgba(114, 98, 170, .4) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
 }
 .btn-outline-primary:hover {
     background-color: #7262aa !important;
-    border-color: rgba(114, 98, 170, .4) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
 }
 .btn-primary:active {
-    background-color: rgba(114, 98, 170, .6) !important;
-    border-color: rgba(114, 98, 170, .4) !important;
+    background-color: rgba(114, 98, 170, 0.6) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
 }
-.btn-primary:focus{
+.btn-primary:focus {
     background-color: #7262aa;
-    border-color: rgba(114, 98, 170, .4) !important;
+    border-color: rgba(114, 98, 170, 0.4) !important;
     box-shadow: 0 0 0 0.15rem hsl(250, 21%, 78%);
 }
 .nav-link {
@@ -80,7 +82,7 @@ div.react-datepicker {
 .nav-link:hover {
     color: #7262aa;
 }
-.nav-link.active{
+.nav-link.active {
     background-color: #7262aa !important;
     color: white !important;
     border-style: solid !important;
@@ -105,10 +107,21 @@ div.react-datepicker {
 }
 
 .modal-footer {
-    border-radius:0px;
+    border-radius: 0px;
     /* background-color: #f8fafc; */
 }
-td{
+td {
     vertical-align: middle !important;
-
 }
+
+.nav-tabs {
+    background-color: white !important;
+}
+#impairment-tabs > div.tab-content {
+    padding: 0px !important;
+    border: none !important;
+}
+/* #impairment-tabs > div.tab-content {
+    padding: 0px !important;
+    border: none !important;
+} */

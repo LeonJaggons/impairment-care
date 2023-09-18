@@ -17,3 +17,5 @@ export const API_CHAPTER = joinAPIURL(["impairment", "chapter"]);
 
 export const API_PATIENT = joinAPIURL(["patient"]);
 export const API_VISIT = joinAPIURL(["patient", "visit"]);
+
+export const API_PATIENT_IMPAIRMENT = joinAPIURL(["impairment", "patient"]);

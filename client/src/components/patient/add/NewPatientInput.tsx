@@ -127,7 +127,7 @@ const NewPatientSelectInput = (props: {
                 onChange={props.handleChange}
                 value={props.value ? parseInt(props.value) : 0}
             >
-                {options.map((opt) => (
+                {options?.map((opt) => (
                     <option
                         key={props.dataKey + "-ID-" + opt.id}
                         value={opt.id}

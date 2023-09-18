@@ -42,20 +42,43 @@ func handleGetDependantImpairments(c *gin.Context) {
 func handleGetPatientImpairment(c *gin.Context) {
 	patientID := c.Query("patientID")
 
+	patientImpairments := getPatientImpairment(patientID)
+	c.JSON(http.StatusOK, patientImpairments)
+}
+
+func getPatientImpairment(patientID string) []models.PatientImpairment {
 	patientImpairmentTable := database.Store.Table("patient_impairment").Where("patientid = ?", patientID)
 	var patientImpairments []models.PatientImpairment
 
 	patientImpairmentTable.Find(&patientImpairments)
-	c.JSON(http.StatusOK, patientImpairments)
+	return patientImpairments
+
+}
+
+type ImpairmentUpdateParams struct {
+	PatientId int     `json:"patientID" gorm:"column:patientid"`
+	ImpCode   string  `json:"impCode" gorm:"column:impcode"`
+	Value     float64 `json:"value" gorm:"column:value"`
 }
 
 func handleUpdatePatientImpairment(c *gin.Context) {
-	patientID, _ := strconv.Atoi(c.Query("patientID"))
-	impCode := c.Query("impCode")
-	value, _ := strconv.ParseFloat(c.Query("value"), 64)
+	var params ImpairmentUpdateParams
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"issue": err.Error(),
+		})
+		return
+	}
+	patientID := params.PatientId
+	impCode := params.ImpCode
+	value := params.Value
 
 	imp := getImpairment(impCode)
 	updatePatientImpairment(patientID, value, imp)
+
+	patientImpairments := getPatientImpairment(strconv.Itoa(params.PatientId))
+	c.JSON(http.StatusOK, patientImpairments)
+
 }
 
 func updatePatientImpairment(patientID int, value float64, imp models.Impairment) {
