@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"impairment-care/database"
 	"impairment-care/models"
 	im "impairment-care/models/impairment"
@@ -78,7 +79,6 @@ func handleUpdatePatientImpairment(c *gin.Context) {
 
 	patientImpairments := getPatientImpairment(strconv.Itoa(params.PatientId))
 	c.JSON(http.StatusOK, patientImpairments)
-
 }
 
 func updatePatientImpairment(patientID int, value float64, imp models.Impairment) {
@@ -110,9 +110,18 @@ func calculateImpairment(patientID int, imp models.Impairment, value float64) mo
 	case "LOOKUP_5":
 	case "LOOKUP_10":
 		impVal = calculateIVWithLookup(patientID, imp, value)
+		break
 	case "ADD":
 		factors := imp.GetFactorImpairmentValues(patientID)
 		impVal = calculateImpairmentWithAddition(patientID, factors)
+		break
+	case "SCALED_ADD":
+
+		factors := imp.GetFactorImpairmentValues(patientID)
+		fmt.Println(factors)
+		impVal = calculateImpairmentWithScaledAddition(imp, patientID, factors)
+		break
+
 	}
 	return impVal
 
@@ -150,6 +159,37 @@ func calculateImpairmentWithAddition(patientID int, imps []models.PatientImpairm
 		totalImpVal = totalImpVal.Add(iv)
 	}
 	return totalImpVal
+}
+func calculateImpairmentWithScaledAddition(
+	targetImp models.Impairment,
+	patientID int,
+	imps []models.PatientImpairment) models.PatientImpairment {
+	var totalImpVal = models.EmptyPatientImpairment(patientID)
+	for _, iv := range imps {
+		scaledIV := getScaledImpairmentValue(iv, targetImp)
+		totalImpVal = totalImpVal.Add(scaledIV)
+	}
+	return totalImpVal
+}
+
+func getScaledImpairmentValue(inputImp models.PatientImpairment, targetImp models.Impairment) models.PatientImpairment {
+	newImp := inputImp
+	var impScale models.ImpairmentScale
+	val := inputImp.Value
+	database.Store.Table("impairment_scale").Where("input_imp_code = ?", inputImp.ImpairmentCode).Where("target_imp_code = ?", targetImp.Code).Find(&impScale)
+	fmt.Println(impScale)
+	switch impScale.Operation {
+	case "MULT":
+		fmt.Println(val)
+		fmt.Println(impScale.ScaleFactor)
+		fmt.Println(newImp.Value)
+		newImp.Value = val * impScale.ScaleFactor
+		fmt.Println(newImp.Value)
+	}
+
+	fmt.Println(newImp)
+
+	return newImp
 }
 
 func getImpairment(impCode string) models.Impairment {

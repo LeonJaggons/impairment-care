@@ -9,12 +9,14 @@ create table impairment_operation (
 );
 insert into impairment_operation (name, code, description)
 values
+	('Addition', 'ADD', 'Specifies that impairment values should be combined with normal addition, with each addend scaled by some factor; for impairments A,B',
 	('Addition', 'ADD', 'Specifies that impairment values should be combined with normal addition; for impairments A,B: ADD(A,B) <=> A + B'),
 	('Combination', 'COMBINE', 'Specifies that impairment values should be combined with impairment combination; for impairments A, B: COMBINE(A, B) <=> 1-(1-A)(1-B)'),
 	('Lookup Multiple of 5', 'LOOKUP_5', 'Impairment value normalized to multiple of 5 should be queried from an existing table of the same name'),
 	('Lookup Multiple of 10', 'LOOKUP_10', 'Impairment value normalized to multiple of 10 should be queried from an existing table of the same name');
 select * from impairment_operation;
 
+drop table if exists patient_impairment;
 create table patient_impairment (
 	id serial primary key,
 	patientID int,
@@ -23,7 +25,7 @@ create table patient_impairment (
 	impairment_value float
 );
 
-drop table impairment;
+drop table if exists impairment;
 create table impairment(
 	id serial primary key,
 	name varchar(100),
@@ -32,7 +34,7 @@ create table impairment(
 	factors text[],
 	operation_code varchar(10),
 	impairment_unit varchar(50)
-)
+);
 
 insert into impairment (name, code, description, factors, operation_code, impairment_unit)
 values 
@@ -41,12 +43,29 @@ values
 	('MP Thumb Flexion',   'ThbMPFlex', 'Impairment due to loss of flexion of the thumb MP joint',  null, 'LOOKUP_10', 'ROM'),
 	('MP Thumb Extension', 'ThbMPExt', 'Impairment due to loss of extension of the thumb MP joint', null, 'LOOKUP_10', 'ROM'),
 	('Thumb ROM', 'ThbROM', 'Impairment due to loss of thumb range of motion', '{"ThbIPFlex", "ThbIPExt", "ThbMPFlex", "ThbMPExt"}', 'ADD', 'THUMB'),
-	('Thumb', 'Thb', 'Impairment of thumb', '{"ThbROM"}', 'ADD', 'HAND')
+	('Thumb', 'Thb', 'Impairment of thumb', '{"ThbROM"}', 'ADD', 'HAND');
+	('Hand', 'Hand' 'Impairment of the hand', '{"Thb"}', 'SCALED_ADD')
+	('Upper Extremity', 'Impairment of the upper extremity')
 	
 select * from impairment ;
-drop table imp_ipthbflex;
 
-drop table imp_ipthbext;
+create table impairment_scale (
+	input_imp_code varchar(50),
+	target_imp_code varchar(50),
+	operation varchar(10),
+	scale_factor float
+)
+
+insert into impairment_scale (input_imp_code, target_imp_code, operation, scale_factor)
+values 
+	('Thb', 'Hand', 'MULT', .4)
+
+
+drop table if exists  imp_thbipflex;
+drop table if exists  imp_thbipext;
+drop table if exists  imp_thbmpflex;
+drop table if exists  imp_thbmpext;
+
 create table imp_thbipflex (
 	id serial primary key,
 	value float,
@@ -67,6 +86,7 @@ create table imp_thbmpflex(
 	value float,
 	impairment_value float
 );
+
 
 
 insert into imp_thbipflex (value, impairment_value)
@@ -125,15 +145,14 @@ values
 	(30, 0),
 	(40, 0)
 ;
-select * from imp_ipthbflex;
 
 --delete from patient_impairment where 1=1;
 --drop table patient_impairment;
 --select * from patient_impairment pi2;
 
-select * from patient_impairment;
-select * from impairment i;
-SELECT * FROM "patient_impairment" WHERE patientid = 1 AND impairment_code IN '{"IPThbFlex","IPThbExt","MPThbFlex","MPThbExt"}'
-
--- GET
-select * from impairment i where :code = any(i.factors)
+--select * from patient_impairment;
+--select * from impairment i;
+--SELECT * FROM "patient_impairment" WHERE patientid = 1 AND impairment_code IN '{"IPThbFlex","IPThbExt","MPThbFlex","MPThbExt"}'
+--
+---- GET
+--select * from impairment i where :code = any(i.factors)
