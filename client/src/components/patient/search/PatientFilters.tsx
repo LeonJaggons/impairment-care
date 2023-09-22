@@ -1,5 +1,23 @@
 import React from "react";
-import { Button, Form, Stack } from "react-bootstrap";
+import {
+    Button,
+    Card,
+    Col,
+    Collapse,
+    Form,
+    Nav,
+    Row,
+    Stack,
+} from "react-bootstrap";
+import {
+    MdAccountBox,
+    MdExpandLess,
+    MdExpandMore,
+    MdLocationCity,
+    MdOutlineShield,
+    MdQrCode,
+    MdRefresh,
+} from "react-icons/md";
 
 enum PatientFilterTypes {
     Text,
@@ -8,86 +26,212 @@ enum PatientFilterTypes {
     Date,
     Select,
 }
-const FilterDivider = () => {
-    return (
-        <hr
-            style={{
-                width: "100%",
-                marginTop: 8,
-                marginBottom: 8,
-                color: "rgba(0,0,0,.4)",
-            }}
-        />
-    );
-};
 
 export const PatientFilters = () => {
     return (
         <div id={"patient-filters-container"}>
-            {/* <h5 style={{ marginBottom: 8 }}>Patient Search</h5> */}
-            <Stack gap={2}>
-                <PatientFilter
-                    type={PatientFilterTypes.Text}
-                    label={"First Name"}
-                />
-                <PatientFilter
-                    type={PatientFilterTypes.Text}
-                    label={"Last Name"}
-                />
-                <PatientFilter
-                    type={PatientFilterTypes.Date}
-                    label={"Gender"}
-                />
-                <PatientFilter
-                    type={PatientFilterTypes.Date}
-                    label={"Date of Birth"}
-                />
-                <FilterDivider />
-                <PatientFilter
-                    type={PatientFilterTypes.Numeric}
-                    label={"Medical Record Number"}
-                />
-                <PatientFilter
-                    type={PatientFilterTypes.SSN}
-                    label={"Social Security Number"}
-                />
-                <PatientSearchButton />
-            </Stack>
+            <div
+                style={{
+                    padding: 12,
+                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>
+                    Patient Filters
+                </p>
+
+                <Nav.Link style={{ display: "flex", alignItems: "center" }}>
+                    <MdRefresh size={16} />
+                </Nav.Link>
+            </div>
+            <div
+                style={{
+                    borderBottom: "1px solid rgba(0,0,0,.05)",
+                }}
+            >
+                <FilterSection label={"Demographic"} icon={<MdAccountBox />}>
+                    <PatientFilter
+                        type={PatientFilterTypes.Text}
+                        label={"First Name"}
+                    />
+                    <PatientFilter
+                        type={PatientFilterTypes.Text}
+                        label={"Last Name"}
+                    />
+                    <PatientFilter
+                        type={PatientFilterTypes.Date}
+                        label={"Gender"}
+                    />
+                    <PatientFilter
+                        type={PatientFilterTypes.Date}
+                        label={"Date of Birth"}
+                    />
+                </FilterSection>
+                <FilterSection label={"Insurance"} icon={<MdOutlineShield />}>
+                    <PatientFilter
+                        type={PatientFilterTypes.Numeric}
+                        label={"Medical Record Number"}
+                    />
+                </FilterSection>
+                <FilterSection label={"Location"} icon={<MdLocationCity />}>
+                    <PatientFilter
+                        type={PatientFilterTypes.Text}
+                        label={"City"}
+                    />
+                    <PatientFilter
+                        type={PatientFilterTypes.Text}
+                        label={"State"}
+                    />
+                </FilterSection>
+                <FilterSection label={"Identifiers"} icon={<MdQrCode />}>
+                    <PatientFilter
+                        type={PatientFilterTypes.Numeric}
+                        label={"Medical Record Number"}
+                    />
+                    <PatientFilter
+                        type={PatientFilterTypes.SSN}
+                        label={"Social Security Number"}
+                    />
+                </FilterSection>
+            </div>
+            <Row style={{ padding: 12 }}>
+                <Col style={{ paddingRight: 4, flex: 1 }}>
+                    <Button style={{ width: "100%" }} variant="outline-primary">
+                        Clear
+                    </Button>
+                </Col>
+                <Col style={{ paddingLeft: 4, flex: 1 }}>
+                    <PatientSearchButton />
+                </Col>
+            </Row>
         </div>
+    );
+};
+const FilterSection = (props: {
+    label?: string;
+    children?: React.ReactNode[] | React.ReactNode | undefined;
+    icon?: React.ReactNode;
+}) => {
+    const [collapsed, setCollapsed] = React.useState<boolean>(true);
+    return (
+        <Card style={{ borderRadius: 0, border: "none", marginBottom: 2 }}>
+            <Card.Header
+                style={{
+                    borderBottom: "none",
+                    borderTop: "1px solid rgba(0,0,0,.05)",
+                    // borderRight: "none",
+                    // borderLeft: "none",
+                    // border: "none",
+                    paddingLeft: 12,
+                    borderRadius: 0,
+                    // backgroundColor: "rgba(0, 0, 0, .01)",
+                    backgroundColor: "white",
+                    cursor: "pointer",
+                    display: "flex",
+                    paddingTop: 12,
+                    paddingBottom: 12,
+                    justifyContent: "space-between",
+                }}
+                onClick={() => setCollapsed(!collapsed)}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "black",
+                    }}
+                >
+                    {props.icon}
+                    <Card.Title
+                        style={{
+                            fontSize: 12,
+                            margin: 0,
+                            marginLeft: props.icon ? 10 : 0,
+                        }}
+                    >
+                        {props.label}
+                    </Card.Title>
+                </div>
+                {collapsed ? <MdExpandMore /> : <MdExpandLess />}
+            </Card.Header>
+            <Collapse in={!collapsed}>
+                <div
+                    style={{
+                        height: 50,
+                        borderTop: "1px solid rgba(0,0,0,.05)",
+                    }}
+                >
+                    <Stack
+                        direction={"vertical"}
+                        gap={2}
+                        style={{
+                            padding: 18,
+                            paddingTop: 12,
+                            paddingBottom: 12,
+                        }}
+                    >
+                        {props.children}
+                    </Stack>
+                </div>
+            </Collapse>
+        </Card>
     );
 };
 
 const PatientSearchButton = () => {
-    return (
-        <Button style={{ marginTop: 8 }} variant="primary">
-            Search
-        </Button>
-    );
+    return <Button style={{ width: "100%" }}>Search</Button>;
 };
 
 const PatientFilter = (props: { label: string; type: PatientFilterTypes }) => {
     const getFilter = (type: PatientFilterTypes) => {
         switch (type) {
             case PatientFilterTypes.Text:
-                return <PatientTextFilter label={props.label} />;
+                return <PatientTextFilter />;
             case PatientFilterTypes.Numeric:
-                return <PatientNumberFilter label={props.label} />;
+                return <PatientNumberFilter />;
             case PatientFilterTypes.SSN:
-                return <PatientSSNFilter label={props.label} />;
+                return <PatientSSNFilter />;
             default:
-                return <PatientTextFilter label={props.label} />;
+                return <PatientTextFilter />;
         }
     };
 
-    return <Stack>{getFilter(props.type)}</Stack>;
+    return (
+        <div>
+            <p
+                style={{
+                    margin: 0,
+                    marginBottom: 4,
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: "rgba(0,0,0,.9)",
+                }}
+            >
+                {props.label}
+            </p>
+            {getFilter(props.type)}
+        </div>
+    );
 };
 
-const PatientTextFilter = (props: { label?: string }) => {
-    return <Form.Control placeholder={props.label} />;
+const PatientTextFilter = () => {
+    return <Form.Control type={""} />;
 };
-const PatientNumberFilter = (props: { label?: string }) => {
-    return <Form.Control placeholder={props.label} type={"number"} />;
+const PatientNumberFilter = () => {
+    return (
+        <Form.Control
+            // placeholder={props.label}
+            type={"number"}
+        />
+    );
 };
-const PatientSSNFilter = (props: { label?: string }) => {
-    return <Form.Control type={"number"} placeholder={props.label} />;
+const PatientSSNFilter = () => {
+    return (
+        <Form.Control
+        //placeholder={props.label}
+        />
+    );
 };

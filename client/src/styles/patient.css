@@ -2,19 +2,68 @@
     height: 100%;
     display: flex;
     flex-flow: row nowrap;
+    padding: 18px;
 }
 
 #patient-table-container {
     flex: 1;
+    border-radius: 5px ;
+    overflow: "hidden";
 }
 
 #patient-filters-container {
-    background-color: #e4e0f5;
+    /* background-color: #e4e0f5; */
+    border-radius: 5px;
+    background-color: white;
     flex-grow: 0;
     flex-shrink: 1;
-    flex-basis: 300px;
-    padding: 18px;
-    border-right-width: 1px;
-    border-right-color: rgba(0, 0, 0, .1);
-    border-right-style: solid;
+    flex-basis: 270px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, .1);
+    border-style: solid;
+}
+
+#impairment-tabs {
+    display:flex;
+    flex-flow: column nowrap;
+    flex: 1 1 0px !important;
+    min-height:100% !important;
+    height:100% !important;
+
+}
+#impairment-tabs > ul.nav {
+    margin-bottom: 1px ;
+    border-top-color: rgba(0,0,0,.5) !important;
+    border-top-width: 1px !important;
+    border-top-style: solid !important;
+    border-bottom-color: rgba(0,0,0,.2) !important;
+    border-bottom-width: 1px !important;
+    border-bottom-style: solid !important;
+}
+#impairment-tabs >  .tab-content {
+    flex: 1 1 0px  !important
+}
+#impairment-tabs > .tab-content > div.tab-pane
+{
+height: 100% !important;
+}
+#impairment-tabs > .tab-content > div.tab-pane > #chapter-tabs
+{
+height: 100% !important;
+}
+#impairment-tabs > .tab-content > div.tab-pane > #chapter-tabs > .row {
+height: 100% !important;
+
+}
+
+#impairment-tabs > ul > li > button {
+    border-width: 0px !important;
+}
+#patient-table-container > table > tbody > tr > td {
+font-size: 12px;
+}
+
+#patient-table-container > table > thead > tr > th {
+font-weight: 500;
+font-size: 12px;
 }

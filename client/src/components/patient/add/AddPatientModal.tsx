@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../../redux/store";
 import {
     clearNewPatient,
     closeAddPatient,
+    setNewPatient,
 } from "../../../redux/reducers/patientReducer";
 import DemographicsForm from "./forms/DemographicsForm";
 import {
@@ -38,7 +39,7 @@ const patientTabForms: PatientTabForm[] = [
     },
 ];
 
-const AddPatientModal = () => {
+const AddPatientModal = (props: { static?: boolean }) => {
     const dispatch = useAppDispatch();
     const newPatient = useSelector((state: any) => state.patient.newPatient);
 
@@ -52,6 +53,9 @@ const AddPatientModal = () => {
     };
     useEffect(() => {
         loadSelectData();
+        return () => {
+            dispatch(setNewPatient({}));
+        };
     }, []);
 
     const showAddPatient = useSelector(
@@ -65,7 +69,11 @@ const AddPatientModal = () => {
     const handleAddPatient = async () => {
         await addNewPatient();
     };
-    return (
+    return props.static ? (
+        <div style={{ backgroundColor: "white" }}>
+            <AddPatientNavigation tabs={patientTabForms} />
+        </div>
+    ) : (
         <Modal show={showAddPatient} centered size={"xl"}>
             <Modal.Header>
                 <Modal.Title>Add New Patient</Modal.Title>

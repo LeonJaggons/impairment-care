@@ -12,12 +12,11 @@ import {
 } from "react-bootstrap";
 import { useAppDispatch } from "../../../redux/store";
 import {
-    closePatientVisits,
-    openPatientVisits,
+    setShowPatientVisits,
     setSelectedVisit,
     setVisitTab,
 } from "../../../redux/reducers/patientReducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
     Visit,
     addNewVisit,
@@ -29,13 +28,10 @@ import { Chapter, getChapters } from "../../../services/impairment_services";
 const AddVisitsButton = (props: { patientID?: string }) => {
     const dispatch = useAppDispatch();
     const handleOpen = () => {
-        dispatch(openPatientVisits());
+        props.patientID && dispatch(setShowPatientVisits(props.patientID));
     };
     return (
         <>
-            <Button style={{ flex: 1 }} onClick={handleOpen}>
-                Visits
-            </Button>
             <AddVisitsModal patientID={props.patientID} />
         </>
     );
@@ -74,15 +70,17 @@ const AddVisitsModal = (props: { patientID?: string }) => {
         if (visitTab === "ADD-VISIT") {
             dispatch(setVisitTab("VISIT-TABLE"));
         } else {
-            dispatch(closePatientVisits());
+            dispatch(setShowPatientVisits(""));
         }
     };
 
     React.useEffect(() => {
-        if (showPatientVisits) {
+        if (showPatientVisits !== "") {
             loadVisits();
+        } else {
+            setVisits([]);
         }
-    }, [showPatientVisits]);
+    }, [showPatientVisits, visitTab]);
 
     const handleChangeToAdd = () => {
         dispatch(setVisitTab("ADD-VISIT"));
@@ -91,11 +89,15 @@ const AddVisitsModal = (props: { patientID?: string }) => {
         console.log("SELECTED V", selectedVisit);
     }, [selectedVisit]);
     return (
-        <Modal show={showPatientVisits} centered size={"lg"}>
-            <Modal.Header>
+        <div
+            // show={showPatientVisits === props.patientID}
+            centered
+            size={"lg"}
+        >
+            <CloseButton onClick={handleClose} />
+            {/* <Modal.Header>
                 <Modal.Title>Patient Visits</Modal.Title>
-                <CloseButton onClick={handleClose} />
-            </Modal.Header>
+            </Modal.Header> */}
             <Tab.Container activeKey={visitTab} unmountOnExit>
                 {visitTab === "VISIT-TABLE" && (
                     <Tab.Content eventKey={"VISIT-TABLE"}>
@@ -111,33 +113,31 @@ const AddVisitsModal = (props: { patientID?: string }) => {
                     </Tab.Content>
                 )}
             </Tab.Container>
-            <Modal.Footer>
-                <Row style={{ width: "100%" }}>
+            <Row style={{ width: "100%" }}>
+                <Col>
+                    <Button
+                        style={{ width: "100%" }}
+                        variant={
+                            visitTab === "VISIT-TABLE"
+                                ? "outline-primary"
+                                : "primary"
+                        }
+                        onClick={
+                            visitTab === "VISIT-TABLE"
+                                ? handleChangeToAdd
+                                : handleAddVisit
+                        }
+                    >
+                        {visitTab === "VISIT-TABLE" ? "Add" : "Save"} Visit
+                    </Button>
+                </Col>
+                {selectedVisit && (
                     <Col>
-                        <Button
-                            style={{ width: "100%" }}
-                            variant={
-                                visitTab === "VISIT-TABLE"
-                                    ? "outline-primary"
-                                    : "primary"
-                            }
-                            onClick={
-                                visitTab === "VISIT-TABLE"
-                                    ? handleChangeToAdd
-                                    : handleAddVisit
-                            }
-                        >
-                            {visitTab === "VISIT-TABLE" ? "Add" : "Save"} Visit
-                        </Button>
+                        <OpenVisitButton />
                     </Col>
-                    {selectedVisit && (
-                        <Col>
-                            <OpenVisitButton />
-                        </Col>
-                    )}
-                </Row>
-            </Modal.Footer>
-        </Modal>
+                )}
+            </Row>
+        </div>
     );
 };
 
@@ -147,6 +147,7 @@ const OpenVisitButton = () => {
         (state: any) => state.patient.selectedVisit
     );
     React.useEffect(() => {
+        console.log(selectedVisit);
         setImpairmentURL(
             `/impairment?patientID=${selectedVisit?.patientID}&visitID=${selectedVisit?.id}`
         );
@@ -226,7 +227,6 @@ const VisitChapterSelect = (props: { onChange: any }) => {
         const newChapters = await getChapters();
         setChapters([...newChapters]);
     };
-    const patient = useSelector((state: any) => state.patient.patientChapters);
     React.useEffect(() => {
         loadChapters();
     }, []);
@@ -245,6 +245,7 @@ const VisitRow = (props: { visit: Visit }) => {
     );
     const [rowStyle, setRowStyle] = React.useState<React.CSSProperties>({});
     const handleClick = () => {
+        console.log("VISITS", props.visit);
         dispatch(setSelectedVisit(props.visit));
     };
     React.useEffect(() => {

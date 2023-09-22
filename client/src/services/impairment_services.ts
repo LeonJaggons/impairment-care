@@ -6,9 +6,11 @@ import {
     API_PATIENT_IMPAIRMENT,
 } from "./base_services";
 import {
+    setNewPatient,
     setPatientEditions,
     setPatientImpairment,
 } from "../redux/reducers/patientReducer";
+import { getAllPatients } from "./patient_services";
 
 export type Edition = {
     id: number;
@@ -41,8 +43,9 @@ export const updatePatientImpairment = async (
     impCode: string,
     newValue: string
 ) => {
+    console.log(patientID, impCode, newValue);
     const response = await axios.post(API_PATIENT_IMPAIRMENT, {
-        patientID: patientID,
+        patientID: parseInt(patientID),
         impCode: impCode,
         value: parseFloat(newValue),
     });
@@ -63,5 +66,13 @@ export const getPatientImpairment = async (patientID: number) => {
 
 export const loadPatientImpairment = async (patientID: number) => {
     const patientImpairment = await getPatientImpairment(patientID);
+    console.log("ASYNC", patientImpairment);
     store.dispatch(setPatientImpairment(patientImpairment));
+};
+
+export const loadPatient = async (patientID: number) => {
+    const patient = (await getAllPatients()).find(
+        (p) => p.id === patientID.toString()
+    );
+    store.dispatch(setNewPatient(patient as Object));
 };

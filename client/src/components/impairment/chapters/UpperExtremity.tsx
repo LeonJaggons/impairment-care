@@ -33,14 +33,17 @@ const ImpairmentSection = (props: { title?: string; children?: any }) => {
                 <div
                     style={{
                         padding: 12,
+                        paddingBottom: 8,
+                        paddingTop: 8,
+                        // backgroundColor: "rgba(0,0,0,.02)",
                         borderBottomColor: "#d2d2d2ff",
                         borderBottomWidth: 1,
                         borderBottomStyle: "solid",
                     }}
                 >
-                    <h6 style={{ margin: 0 }}>{props.title}</h6>
+                    <h6 style={{ margin: 0, fontSize: 13 }}>{props.title}</h6>
                 </div>
-                <Card.Body style={{ fontSize: 14 }}>{props.children}</Card.Body>
+                <Card.Body style={{ fontSize: 12 }}>{props.children}</Card.Body>
             </Card>
         </Col>
     );
@@ -50,12 +53,18 @@ const ROMGrid = () => {
     return (
         <div>
             <Row style={{ marginBottom: 8 }}>
-                <Col></Col>
+                <Col style={{ flex: "0 1 80px" }}></Col>
                 <Col>IP</Col>
                 <Col>MP</Col>
             </Row>
-            <Row style={{ marginBottom: 8, flexWrap: "nowrap" }}>
-                <Col>Flexion</Col>
+            <Row
+                style={{
+                    marginBottom: 8,
+                    flexWrap: "nowrap",
+                    alignItems: "center",
+                }}
+            >
+                <Col style={{ flex: "0 1 80px" }}>Flexion</Col>
                 <Col>
                     <ICInput impKey={impDataKeys.THUMB_IP_FLEX} />
                 </Col>
@@ -63,8 +72,14 @@ const ROMGrid = () => {
                     <ICInput impKey={impDataKeys.THUMB_IP_EXT} />
                 </Col>
             </Row>
-            <Row style={{ marginBottom: 8, flexWrap: "nowrap" }}>
-                <Col>Extension</Col>
+            <Row
+                style={{
+                    marginBottom: 8,
+                    flexWrap: "nowrap",
+                    alignItems: "center",
+                }}
+            >
+                <Col style={{ flex: "0 1 80px" }}>Extension</Col>
                 <Col>
                     <ICInput impKey={impDataKeys.THUMB_MP_FLEX} />
                 </Col>

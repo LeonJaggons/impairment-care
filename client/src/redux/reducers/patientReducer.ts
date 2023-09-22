@@ -12,7 +12,7 @@ import { Visit } from "../../services/patient_services";
 
 export interface PatientInitialState {
     showAddPatient: boolean;
-    showPatientVisits: boolean;
+    showPatientVisits: string;
     addPatientEventKey: string;
     newPatient: string;
     patientGenders: Gender[];
@@ -29,7 +29,7 @@ export interface PatientInitialState {
 
 const initialState: PatientInitialState = {
     showAddPatient: false,
-    showPatientVisits: false,
+    showPatientVisits: "",
     addPatientEventKey: "",
     newPatient: JSON.stringify(new Patient()),
     patientGenders: [],
@@ -57,14 +57,8 @@ export const patientSlice = createSlice({
         closeAddPatient: (state) => {
             state.showAddPatient = false;
         },
-        togglePatientVisits: (state) => {
-            state.showPatientVisits = !state.showAddPatient;
-        },
-        openPatientVisits: (state) => {
-            state.showPatientVisits = true;
-        },
-        closePatientVisits: (state) => {
-            state.showPatientVisits = false;
+        setShowPatientVisits: (state, action: PayloadAction<string>) => {
+            state.showPatientVisits = action.payload;
         },
         setSelectedVisit: (state, action: PayloadAction<Visit>) => {
             state.selectedVisit = action.payload;
@@ -105,6 +99,10 @@ export const patientSlice = createSlice({
         setPatientGenders: (state, action: PayloadAction<Gender[]>) => {
             state.patientGenders = action.payload;
         },
+        setNewPatient: (state, action: PayloadAction<Object>) => {
+            const serializedPatient = JSON.stringify(action.payload);
+            state.newPatient = serializedPatient;
+        },
         updateNewPatient: (state, action: PayloadAction<Object>) => {
             const deserializedPatient = JSON.parse(state.newPatient);
             Object.assign(deserializedPatient, action.payload);
@@ -125,10 +123,8 @@ export const {
     toggleAddPatient,
     closeAddPatient,
     openAddPatient,
-    togglePatientVisits,
-    openPatientVisits,
-    closePatientVisits,
     updateNewPatient,
+    setShowPatientVisits,
     setPatientGenders,
     setPatientDominantSides,
     setPatientOccupationCats,
@@ -140,5 +136,6 @@ export const {
     setVisitTab,
     setSelectedVisit,
     setPatientImpairment,
+    setNewPatient,
 } = patientSlice.actions;
 export default patientSlice.reducer;

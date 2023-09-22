@@ -3,39 +3,47 @@ import { Tab, Tabs } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import DemographicsTab from "./demographics/DemographicsTab";
 import ChaptersTab from "./chapters/ChaptersTab";
-import { loadPatientImpairment } from "../../services/impairment_services";
+import {
+    loadPatient,
+    loadPatientImpairment,
+} from "../../services/impairment_services";
 import { useSelector } from "react-redux";
+import Calculator from "./calculator/Calculator";
 
 const Impairment = () => {
     const [queryParams, _] = useSearchParams();
     const visitID = queryParams.get("visitID");
-    const patientID = queryParams.get("patientID");
+    let patientID = queryParams.get("patientID");
 
     const patientImpairment = useSelector(
         (state: any) => state.patient.patientImpairment
     );
 
     useEffect(() => {
-        const testPatientID = 1;
-        loadPatientImpairment(testPatientID);
-    }, []);
+        patientID = patientID ? patientID : "0";
+        const newPatientID = parseInt(patientID);
+        loadPatientImpairment(newPatientID);
+        loadPatient(newPatientID);
+    }, [patientID]);
     useEffect(() => {
         console.table(patientImpairment);
     }, [[patientImpairment]]);
-    return <ImpairmentNavigation />;
+    return <ImpairmentNavigation patientID={patientID} />;
 };
 
-const ImpairmentNavigation = () => {
+const ImpairmentNavigation = (props: { patientID: string | null }) => {
     return (
-        <div id={"impairment-tabs"} style={{ flex: 1 }}>
-            <Tabs>
+        <div id={"impairment-tabs"}>
+            <Tabs justify>
+                <Tab eventKey={"CHAPTERS"} title={"Impairment"}>
+                    <ChaptersTab patientID={props.patientID} />
+                </Tab>
+                <Tab eventKey={"CALCULATOR"} title={"Calculator"}>
+                    <Calculator />
+                </Tab>
                 <Tab eventKey={"DEMOGRAPHICS"} title={"Demographics"}>
                     <DemographicsTab />
                 </Tab>
-                <Tab eventKey={"CHAPTERS"} title={"Chapters"}>
-                    <ChaptersTab />
-                </Tab>
-                <Tab eventKey={"CALCULATOR"} title={"Calculator"}></Tab>
                 <Tab eventKey={"ANALYSIS"} title={"Analysis"}></Tab>
                 <Tab eventKey={"REPORTS"} title={"Reports"}></Tab>
                 <Tab eventKey={"HELP"} title={"Help"}></Tab>
