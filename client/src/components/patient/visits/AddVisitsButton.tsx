@@ -89,23 +89,21 @@ const AddVisitsModal = (props: { patientID?: string }) => {
         console.log("SELECTED V", selectedVisit);
     }, [selectedVisit]);
     return (
-        <div
-            // show={showPatientVisits === props.patientID}
-            centered
-            size={"lg"}
-        >
-            <CloseButton onClick={handleClose} />
+        <div style={{ backgroundColor: "white" }}>
             {/* <Modal.Header>
                 <Modal.Title>Patient Visits</Modal.Title>
             </Modal.Header> */}
             <Tab.Container activeKey={visitTab} unmountOnExit>
                 {visitTab === "VISIT-TABLE" && (
-                    <Tab.Content eventKey={"VISIT-TABLE"}>
+                    <Tab.Content
+                        eventKey={"VISIT-TABLE"}
+                        style={{ padding: 0 }}
+                    >
                         <PatientVisitsTable visits={visits} />
                     </Tab.Content>
                 )}
                 {visitTab === "ADD-VISIT" && (
-                    <Tab.Content eventKey={"ADD-VISIT"}>
+                    <Tab.Content eventKey={"ADD-VISIT"} style={{ padding: 0 }}>
                         <AddVisitForm
                             newVisit={newVisit}
                             handleUpdateVisit={handleUpdateVisit}
@@ -163,12 +161,12 @@ const OpenVisitButton = () => {
 };
 const PatientVisitsTable = (props: { visits: any[] }) => {
     return (
-        <Table style={{ fontSize: 13 }} bordered hover striped>
+        <Table style={{ fontSize: 12 }} bordered hover striped>
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Default Chapter</th>
+                    <th style={{ padding: 18 }}>Date</th>
+                    <th style={{ padding: 18 }}>Description</th>
+                    <th style={{ padding: 18 }}>Default Chapter</th>
                 </tr>
             </thead>
             <tbody>
@@ -256,14 +254,36 @@ const VisitRow = (props: { visit: Visit }) => {
             setRowStyle({
                 backgroundColor: newBg,
                 color: newColor,
+                padding: 18,
             });
         }
     }, [selectedVisit]);
     return (
         <tr onClick={handleClick} style={{ cursor: "pointer" }}>
-            <td style={rowStyle}>{props.visit.visitDate.toString()}</td>
-            <td style={rowStyle}>{props.visit.visitDescription}</td>
-            <td style={rowStyle}>{props.visit.defaultChapterName}</td>
+            <td
+                style={{
+                    ...rowStyle,
+                    padding: 18,
+                }}
+            >
+                {props.visit.visitDate.toString()}
+            </td>
+            <td
+                style={{
+                    ...rowStyle,
+                    padding: 18,
+                }}
+            >
+                {props.visit.visitDescription}
+            </td>
+            <td
+                style={{
+                    ...rowStyle,
+                    padding: 18,
+                }}
+            >
+                {props.visit.defaultChapterName}
+            </td>
         </tr>
     );
 };

@@ -8,12 +8,22 @@ import {
 } from "react-bootstrap";
 import AddPatientModal from "../add/AddPatientModal";
 import { useAppDispatch } from "../../../redux/store";
-import { toggleAddPatient } from "../../../redux/reducers/patientReducer";
+import {
+    setSelectedVisit,
+    setShowPatientVisits,
+    toggleAddPatient,
+} from "../../../redux/reducers/patientReducer";
 import Patient from "../../../models/patient";
-import React from "react";
-import { getAllPatients } from "../../../services/patient_services";
+import React, { useEffect } from "react";
+import { Visit, getAllPatients } from "../../../services/patient_services";
 import AddVisitsButton from "../visits/AddVisitsButton";
-import { MdExpandMore, MdFilterAlt, MdPersonAdd } from "react-icons/md";
+import {
+    MdExpandLess,
+    MdExpandMore,
+    MdFilterAlt,
+    MdPersonAdd,
+} from "react-icons/md";
+import { useSelector } from "react-redux";
 export const PatientTableSection = () => {
     return (
         <div id={"patient-table-container"}>
@@ -59,7 +69,28 @@ const PatientTable = () => {
     );
 };
 const PatientRow = (props: { patient: Patient }) => {
+    const dispatch = useAppDispatch();
     const [collapsed, setCollapsed] = React.useState(false);
+    const showPatientVisits = useSelector(
+        (state: any) => state.patient.showPatientVisits
+    );
+    console.log(props.patient);
+    useEffect(() => {
+        if (props.patient.id) {
+            setCollapsed(props.patient.id === showPatientVisits);
+        }
+    }, [showPatientVisits]);
+
+    const handleClick = () => {
+        if (props.patient.id) {
+            if (props.patient.id === showPatientVisits) {
+                dispatch(setShowPatientVisits(""));
+                dispatch(setSelectedVisit(null));
+            } else {
+                dispatch(setShowPatientVisits(props.patient.id?.toString()));
+            }
+        }
+    };
     return (
         <>
             <tr>
@@ -74,8 +105,12 @@ const PatientRow = (props: { patient: Patient }) => {
                         direction={"horizontal"}
                         gap={1}
                     >
-                        <Button onClick={() => setCollapsed(!collapsed)}>
-                            <MdExpandMore />
+                        <Button onClick={handleClick}>
+                            {showPatientVisits !== props.patient.id ? (
+                                <MdExpandMore size={15} />
+                            ) : (
+                                <MdExpandLess size={15} />
+                            )}
                         </Button>
                         <Button
                             style={{ flex: 1 }}
@@ -93,7 +128,13 @@ const PatientRow = (props: { patient: Patient }) => {
                     lineHeight: "0px",
                 }}
             >
-                <td colSpan={5} style={{ padding: 0 }}>
+                <td
+                    colSpan={6}
+                    style={{
+                        padding: 0,
+                        backgroundColor: "rgba(114, 98, 170,.2) !important",
+                    }}
+                >
                     <Collapse in={collapsed}>
                         <div style={{ height: 50 }}>
                             <div style={{ padding: 12 }}>
@@ -103,7 +144,6 @@ const PatientRow = (props: { patient: Patient }) => {
                     </Collapse>
                 </td>
             </tr>
-            <tr></tr>
         </>
     );
 };
