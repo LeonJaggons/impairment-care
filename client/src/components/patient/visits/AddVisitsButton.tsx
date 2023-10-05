@@ -89,21 +89,29 @@ const AddVisitsModal = (props: { patientID?: string }) => {
         console.log("SELECTED V", selectedVisit);
     }, [selectedVisit]);
     return (
-        <div style={{ backgroundColor: "white" }}>
-            {/* <Modal.Header>
-                <Modal.Title>Patient Visits</Modal.Title>
-            </Modal.Header> */}
+        <div>
+            <Row style={{ justifyContent: "flex-end", width: "100%" }}>
+                {visitTab === "ADD-VISIT" && (
+                    <CloseButton
+                        style={{ marginBottom: 12 }}
+                        onClick={handleClose}
+                    />
+                )}
+            </Row>
             <Tab.Container activeKey={visitTab} unmountOnExit>
                 {visitTab === "VISIT-TABLE" && (
                     <Tab.Content
                         eventKey={"VISIT-TABLE"}
-                        style={{ padding: 0 }}
+                        style={{ border: "none" }}
                     >
                         <PatientVisitsTable visits={visits} />
                     </Tab.Content>
                 )}
                 {visitTab === "ADD-VISIT" && (
-                    <Tab.Content eventKey={"ADD-VISIT"} style={{ padding: 0 }}>
+                    <Tab.Content
+                        eventKey={"ADD-VISIT"}
+                        style={{ padding: 0, border: "none" }}
+                    >
                         <AddVisitForm
                             newVisit={newVisit}
                             handleUpdateVisit={handleUpdateVisit}
@@ -111,7 +119,7 @@ const AddVisitsModal = (props: { patientID?: string }) => {
                     </Tab.Content>
                 )}
             </Tab.Container>
-            <Row style={{ width: "100%" }}>
+            <Row style={{ marginTop: 12 }}>
                 <Col>
                     <Button
                         style={{ width: "100%" }}
@@ -161,14 +169,14 @@ const OpenVisitButton = () => {
 };
 const PatientVisitsTable = (props: { visits: any[] }) => {
     return (
-        <Table style={{ fontSize: 12 }} bordered hover striped>
-            <thead>
+        <Table bordered hover striped>
+            {/* <thead>
                 <tr>
                     <th style={{ padding: 18 }}>Date</th>
                     <th style={{ padding: 18 }}>Description</th>
                     <th style={{ padding: 18 }}>Default Chapter</th>
                 </tr>
-            </thead>
+            </thead> */}
             <tbody>
                 {props.visits.map((v) => (
                     <VisitRow visit={v} />
@@ -187,7 +195,7 @@ const AddVisitForm = (props: { newVisit: Visit; handleUpdateVisit: any }) => {
         props.handleUpdateVisit("defaultChapterID", e.target.value);
 
     return (
-        <Stack gap={3}>
+        <Stack gap={3} style={{ padding: 14 }}>
             <Row>
                 <Col>
                     <Form.Label>Visit Date</Form.Label>

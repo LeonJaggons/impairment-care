@@ -20,6 +20,7 @@ func AddImpairmentRoutes(router *gin.Engine) {
 	router.POST("/impairment/patient", handleUpdatePatientImpairment)
 
 	router.GET("/impairment/dependant", handleGetDependantImpairments)
+	router.GET("/impairment/values", getSelectImpairmentValues)
 }
 
 func getEditions(c *gin.Context) {
@@ -30,8 +31,18 @@ func getEditions(c *gin.Context) {
 
 func getChapters(c *gin.Context) {
 	var chapters []im.Chapter
-	database.Store.Find(&chapters)
-	c.JSON(http.StatusOK, chapters)
+	database.Store.Select("id", "code", "name").Find(&chapters)
+
+	var chapterViews []im.ChapterView
+	for _, c := range chapters {
+		var chapterSections []im.ChapterSection
+		database.Store.Table("chapter_section").Where("chapterid = ?", c.ID).Order("orderid ASC").Find(&chapterSections)
+		chapterViews = append(chapterViews, im.ChapterView{
+			Chapter:         c,
+			ChapterSections: chapterSections,
+		})
+	}
+	c.JSON(http.StatusOK, chapterViews)
 }
 
 func handleGetDependantImpairments(c *gin.Context) {
@@ -40,6 +51,7 @@ func handleGetDependantImpairments(c *gin.Context) {
 	c.JSON(http.StatusOK, depImps)
 }
 
+// Main impairment calculation
 func handleGetPatientImpairment(c *gin.Context) {
 	patientID := c.Query("patientID")
 
@@ -53,6 +65,14 @@ func getPatientImpairment(patientID string) []models.PatientImpairment {
 
 	patientImpairmentTable.Find(&patientImpairments)
 	return patientImpairments
+}
+
+func getSelectImpairmentValues(c *gin.Context) {
+	impCode := c.Query("impCode")
+	imp := getImpairment(impCode)
+	var values []models.ImpairmentValue
+	database.Store.Table(imp.ValuesTable).Find(&values)
+	c.JSON(http.StatusOK, values)
 
 }
 
@@ -85,16 +105,20 @@ func updatePatientImpairment(patientID int, value float64, imp models.Impairment
 	impValue := calculateImpairment(patientID, imp, value)
 	if patientImpairmentExist(patientID, imp.Code) {
 		updatedValues := map[string]interface{}{
-			"value":            value,
-			"impairment_value": impValue.ImpairmentValue,
+			"value":             value,
+			"impairment_value":  impValue.ImpairmentValue,
+			"error_code":        impValue.ErrorCode,
+			"error_description": impValue.ErrorDescription,
 		}
 		database.Store.Table("patient_impairment").Where("patientid = ?", patientID).Where("impairment_code = ?", imp.Code).Updates(updatedValues)
 	} else {
 		newPatientImpairment := models.PatientImpairment{
-			PatientId:       patientID,
-			ImpairmentCode:  imp.Code,
-			Value:           value,
-			ImpairmentValue: impValue.ImpairmentValue,
+			PatientId:        patientID,
+			ImpairmentCode:   imp.Code,
+			Value:            value,
+			ImpairmentValue:  impValue.ImpairmentValue,
+			ErrorCode:        "",
+			ErrorDescription: "",
 		}
 		database.Store.Create(&newPatientImpairment)
 	}
@@ -107,18 +131,19 @@ func updatePatientImpairment(patientID int, value float64, imp models.Impairment
 func calculateImpairment(patientID int, imp models.Impairment, value float64) models.PatientImpairment {
 	var impVal models.PatientImpairment
 	switch imp.OperationCode {
-	case "LOOKUP_5":
-	case "LOOKUP_10":
+	case "LOOKUP", "LOOKUP_5", "LOOKUP_10":
 		impVal = calculateIVWithLookup(patientID, imp, value)
 		break
 	case "ADD":
 		factors := imp.GetFactorImpairmentValues(patientID)
 		impVal = calculateImpairmentWithAddition(patientID, factors)
 		break
-	case "SCALED_ADD":
-
+	case "COMBINE":
 		factors := imp.GetFactorImpairmentValues(patientID)
-		fmt.Println(factors)
+		impVal = calculateImpairmentWithCombination(patientID, factors)
+		break
+	case "SCALED_ADD":
+		factors := imp.GetFactorImpairmentValues(patientID)
 		impVal = calculateImpairmentWithScaledAddition(imp, patientID, factors)
 		break
 
@@ -134,7 +159,6 @@ func patientImpairmentExist(patientID int, impCode string) bool {
 
 }
 
-// IV = impairment value
 func calculateIVWithLookup(patientID int, imp models.Impairment, value float64) models.PatientImpairment {
 	switch imp.OperationCode {
 	case "LOOKUP_5":
@@ -144,12 +168,29 @@ func calculateIVWithLookup(patientID int, imp models.Impairment, value float64) 
 	default:
 		break
 	}
-	impValueTableName := "imp_" + strings.ToLower(imp.Code)
+	var impValueTableName string
+	if imp.ValuesTable == "" {
+		impValueTableName = "imp_" + strings.ToLower(imp.Code)
+	} else {
+		impValueTableName = imp.ValuesTable
+	}
 
 	var impValue models.PatientImpairment
+	var maxVal float64
+	var minVal float64
+	maxRow := database.Store.Table(impValueTableName).Select("max(value)").Row()
+	minRow := database.Store.Table(impValueTableName).Select("min(value)").Row()
+	maxRow.Scan(&maxVal)
+	minRow.Scan(&minVal)
 	database.Store.Table(impValueTableName).Where("value = ?", value).Find(&impValue)
 	impValue.ID = 0
 	impValue.PatientId = patientID
+
+	if maxVal < value || minVal > value {
+		impValue.ErrorCode = "OUT_OF_BOUNDS"
+		impValue.ErrorDescription = fmt.Sprintf("Value must be between %d and %d", int(minVal), int(maxVal))
+
+	}
 	return impValue
 }
 
@@ -160,6 +201,16 @@ func calculateImpairmentWithAddition(patientID int, imps []models.PatientImpairm
 	}
 	return totalImpVal
 }
+
+func calculateImpairmentWithCombination(patientID int, imps []models.PatientImpairment) models.PatientImpairment {
+	var totalImpVal = models.EmptyPatientImpairment(patientID)
+	for _, iv := range imps {
+		totalImpVal = totalImpVal.Combine(iv)
+	}
+	totalImpVal.ImpairmentValue *= 100
+	return totalImpVal
+}
+
 func calculateImpairmentWithScaledAddition(
 	targetImp models.Impairment,
 	patientID int,
@@ -177,17 +228,10 @@ func getScaledImpairmentValue(inputImp models.PatientImpairment, targetImp model
 	var impScale models.ImpairmentScale
 	val := inputImp.Value
 	database.Store.Table("impairment_scale").Where("input_imp_code = ?", inputImp.ImpairmentCode).Where("target_imp_code = ?", targetImp.Code).Find(&impScale)
-	fmt.Println(impScale)
 	switch impScale.Operation {
 	case "MULT":
-		fmt.Println(val)
-		fmt.Println(impScale.ScaleFactor)
-		fmt.Println(newImp.Value)
 		newImp.Value = val * impScale.ScaleFactor
-		fmt.Println(newImp.Value)
 	}
-
-	fmt.Println(newImp)
 
 	return newImp
 }

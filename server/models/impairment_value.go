@@ -4,6 +4,7 @@ type ImpairmentValue struct {
 	ID              int     `json:"id" gorm:"column:id"`
 	Value           float64 `json:"value" gorm:"column:value"`
 	ImpairmentValue float64 `json:"impairmentValue" gorm:"column:impairment_value"`
+	Description     string  `json:"description" gorm:"column:description"`
 }
 
 func (iv ImpairmentValue) Add(otherIV ImpairmentValue) ImpairmentValue {

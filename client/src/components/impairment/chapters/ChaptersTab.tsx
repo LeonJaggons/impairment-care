@@ -13,8 +13,10 @@ import {
     getChapters,
     loadPatientImpairment,
 } from "../../../services/impairment_services";
-import UpperExtremity from "./UpperExtremity";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import ChapterSectionTabs from "./ChapterSectionTabs";
+import { setSelectedChapter } from "../../../redux/reducers/patientReducer";
+import { useAppDispatch } from "../../../redux/store";
 
 const ChaptersTab = (props: { patientID: string | null }) => {
     const [chapterKey, setChapterKey] = React.useState("");
@@ -24,12 +26,11 @@ const ChaptersTab = (props: { patientID: string | null }) => {
     return (
         <div id={"chapter-tabs"}>
             <Tab.Container activeKey={chapterKey}>
-                <Row style={{ width: "100vw", maxWidth: "100vw" }}>
+                <Row>
                     <Col
                         style={{
                             flexGrow: 0,
                             flexShrink: 1,
-                            // flexBasis: "17.55%",
                             paddingRight: 0,
                         }}
                     >
@@ -47,7 +48,13 @@ const ChaptersTab = (props: { patientID: string | null }) => {
                             }}
                         >
                             <Tab.Pane eventKey={"Upper Extremity"}>
-                                <UpperExtremity />
+                                <ChapterSectionTabs chapterKey="UPPER" />
+                            </Tab.Pane>
+                            <Tab.Pane eventKey={"Lower Extremity"}>
+                                <ChapterSectionTabs chapterKey="LOWER" />
+                            </Tab.Pane>
+                            <Tab.Pane eventKey={"Spine"}>
+                                <ChapterSectionTabs chapterKey="SPINE" />
                             </Tab.Pane>
                         </TabContent>
                     </Col>
@@ -98,27 +105,12 @@ const ChaptersMenu = (props: {
                     {collapseDone && <h6 style={{ margin: 0 }}>Chapters</h6>}
                 </span>
                 {isCollapsed && <div style={{ flex: 1, height: 12 }} />}
-                <Button
-                    onClick={() => {
-                        setCollapseDone(false);
-                        setIsCollapsed(!isCollapsed);
-                    }}
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 0,
-                        aspectRatio: 1,
-                        height: 30,
-                    }}
-                    variant={"ghost"}
-                >
-                    {!collapseDone ? (
-                        <MdChevronRight size={20} />
-                    ) : (
-                        <MdChevronLeft size={20} />
-                    )}
-                </Button>
+                {CollapseButton(
+                    setCollapseDone,
+                    setIsCollapsed,
+                    isCollapsed,
+                    collapseDone
+                )}
             </div>
             <Collapse
                 in={isCollapsed}
@@ -126,57 +118,109 @@ const ChaptersMenu = (props: {
                 onExiting={() => setCollapseDone(false)}
                 onEntered={() => setCollapseDone(true)}
             >
-                <div>
-                    <div>
-                        <Stack gap={1}>
-                            {/* <h6>Impairment Chapters</h6> */}
-                            {chapters.map((c) => (
-                                <Button
-                                    style={{
-                                        border: "none",
-                                        width: "100%",
-                                        overflow: "hidden",
-                                        textOverflow: "clip",
-                                        whiteSpace: "nowrap",
-                                        display: "flex",
-                                        justifyContent: "flex-start",
-                                        fontSize: 12,
-                                    }}
-                                    onClick={() => {
-                                        props.setChapterKey(c.name);
-                                        console.log(c.name);
-                                        // setIsCollapsed(!isCollapsed);
-                                    }}
-                                    variant={
-                                        props.selectedChapterKey === c.name
-                                            ? "primary"
-                                            : "outline-primary"
-                                    }
-                                >
-                                    {c.name}
-                                </Button>
-                            ))}
-                            <hr />
-                            <Button
-                                style={{
-                                    width: "100%",
-                                    overflow: "hidden",
-                                    textOverflow: "clip",
-                                    whiteSpace: "nowrap",
-                                    display: "flex",
-                                    justifyContent: "flex-start",
-                                    fontSize: 12,
-                                }}
-                                variant={"outline-primary"}
-                            >
-                                Apportionment Analysis
-                            </Button>
-                        </Stack>
-                    </div>
-                </div>
+                {ChapterMenu(chapters, props)}
             </Collapse>
         </div>
     );
 };
+
+function ChapterMenu(
+    chapters: Chapter[],
+    props: { selectedChapterKey: string; setChapterKey: any }
+) {
+    return (
+        <div style={{ width: "230px" }}>
+            <Stack gap={1}>
+                {/* <h6>Impairment Chapters</h6> */}
+                {chapters.map((c) => (
+                    <>
+                        {console.log(c)}
+                        {ChapterButton(props, c)}
+                    </>
+                ))}
+                <hr />
+                <Button
+                    style={{
+                        width: "100%",
+                        overflow: "hidden",
+                        textOverflow: "clip",
+                        whiteSpace: "nowrap",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        fontSize: 12,
+                    }}
+                    variant={"outline-primary"}
+                >
+                    Apportionment Analysis
+                </Button>
+            </Stack>
+        </div>
+    );
+}
+
+function ChapterButton(
+    props: { selectedChapterKey: string; setChapterKey: any },
+    c: Chapter
+) {
+    const dispatch = useAppDispatch();
+    return (
+        <Button
+            style={{
+                border: "none",
+                width: "100%",
+                overflow: "hidden",
+                textOverflow: "clip",
+                whiteSpace: "nowrap",
+                display: "flex",
+                justifyContent: "flex-start",
+                fontSize: 12,
+            }}
+            onClick={() => {
+                props.setChapterKey(c.chapter.name);
+                dispatch(setSelectedChapter(c));
+                console.log(c.name);
+                // setIsCollapsed(!isCollapsed);
+            }}
+            variant={
+                props.selectedChapterKey === c.chapter.name
+                    ? "primary"
+                    : "outline-primary"
+            }
+        >
+            {c.chapter.name}
+        </Button>
+    );
+}
+
+function CollapseButton(
+    setCollapseDone: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>,
+    isCollapsed: boolean,
+    collapseDone: boolean
+) {
+    return (
+        <Button
+            onClick={() => {
+                setCollapseDone(false);
+                setIsCollapsed(!isCollapsed);
+            }}
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 0,
+                aspectRatio: 1,
+                height: 30,
+            }}
+            variant={"ghost"}
+        >
+            {!collapseDone ? (
+                <MdChevronRight size={20} />
+            ) : (
+                <MdChevronLeft size={20} />
+            )}
+        </Button>
+    );
+}
 
 export default ChaptersTab;

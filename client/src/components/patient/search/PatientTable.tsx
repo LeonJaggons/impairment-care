@@ -58,14 +58,23 @@ const PatientTable = () => {
         loadPatients();
     }, []);
     return (
-        <Table style={{ borderRadius: "5px !important" }} bordered hover>
-            <PatientTableHeader headers={patientTableHeaders} />
-            <tbody>
-                {patients.map((p) => (
-                    <PatientRow patient={p} />
-                ))}
-            </tbody>
-        </Table>
+            <Table style={{ border: "1px solid rgba(0,0,0,.1)" }} bordered>
+                <PatientTableHeader headers={patientTableHeaders} />
+                <tbody>
+                    {patients.map((p) => (
+                        <PatientRow patient={p} />
+                    ))}
+                </tbody>
+            </Table>
+        // <div
+        //     style={{
+        //         borderRadius: "6px",
+        //         overflow: "hidden",
+        //         backgroundColor: "white",
+        //         padding: "25px 0px",
+        //     }}
+        // >
+        // </div>
     );
 };
 const PatientRow = (props: { patient: Patient }) => {
@@ -105,12 +114,17 @@ const PatientRow = (props: { patient: Patient }) => {
                         direction={"horizontal"}
                         gap={1}
                     >
-                        <Button onClick={handleClick}>
+                        <Button
+                            onClick={handleClick}
+                            variant={"outline-primary"}
+                            style={{ flex: 1 }}
+                        >
                             {showPatientVisits !== props.patient.id ? (
                                 <MdExpandMore size={15} />
                             ) : (
                                 <MdExpandLess size={15} />
                             )}
+                            <span style={{ marginLeft: 4 }}>Visits</span>
                         </Button>
                         <Button
                             style={{ flex: 1 }}

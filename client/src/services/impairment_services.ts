@@ -3,6 +3,7 @@ import axios from "axios";
 import {
     API_CHAPTER,
     API_EDITION,
+    API_IMPAIRMENT_VALUES,
     API_PATIENT_IMPAIRMENT,
 } from "./base_services";
 import {
@@ -35,7 +36,20 @@ export const loadEditions = async () => {
 export const getChapters = async (): Promise<Chapter[]> => {
     const response = await axios.get(API_CHAPTER);
     const chapters = response.data as Chapter[];
+    console.log("CHAPTERS", chapters);
     return chapters;
+};
+
+export const getSelectImpairmentValues = async (
+    impCode: string
+): Promise<any> => {
+    const response = await axios.get(API_IMPAIRMENT_VALUES, {
+        params: {
+            impCode: impCode,
+        },
+    });
+    const selectValues = response.data;
+    return selectValues;
 };
 
 export const updatePatientImpairment = async (

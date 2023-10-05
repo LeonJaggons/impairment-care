@@ -25,6 +25,8 @@ export interface PatientInitialState {
     visitTab: string;
     selectedVisit?: Visit;
     patientImpairment: any;
+    selectedChapter?: any;
+    selectedChapterSection?: any;
 }
 
 const initialState: PatientInitialState = {
@@ -42,6 +44,8 @@ const initialState: PatientInitialState = {
     visitTab: "VISIT-TABLE",
     selectedVisit: undefined,
     patientImpairment: [],
+    selectedChapter: [],
+    selectedChapterSection: {},
 };
 
 export const patientSlice = createSlice({
@@ -116,6 +120,13 @@ export const patientSlice = createSlice({
         setPatientImpairment: (state, action: PayloadAction<any>) => {
             state.patientImpairment = action.payload;
         },
+
+        setSelectedChapter: (state, action: PayloadAction<any>) => {
+            state.selectedChapter = action.payload;
+        },
+        setSelectedChapterSection: (state, action: PayloadAction<any>) => {
+            state.selectedChapterSection = action.payload;
+        },
     },
 });
 
@@ -137,5 +148,7 @@ export const {
     setSelectedVisit,
     setPatientImpairment,
     setNewPatient,
+    setSelectedChapter,
+    setSelectedChapterSection,
 } = patientSlice.actions;
 export default patientSlice.reducer;

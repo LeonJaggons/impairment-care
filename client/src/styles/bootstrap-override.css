@@ -20,12 +20,12 @@ div.react-datepicker__input-container > input {
 .form-control,
 .form-select,
 div.react-datepicker__input-container > input {
-    border-width: 1px;
+    border-width: 0.05px;
     border-radius: 0px;
     font-size: 14px;
-    border-color: rgba(0, 0, 0, 0.2);
-    transition: 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    background-color: rgba(255,255,255,.9);
+    border-color: rgba(0, 0, 0, 0.15);
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    background-color: rgba(0,0,0,.02) ;
     font-size: 12px;
 }
 .form-control:hover,
@@ -99,12 +99,13 @@ div.react-datepicker__input-container > input:focus {
 }
 
 .tab-content {
-    min-height: 200px;
+    min-height: 40px;
     padding: 18px;
     border-style: solid;
     border-color: #dee2e6;
     border-width: 1px;
     border-top: none;
+    background-color: white;
 }
 
 .modal-title {
@@ -123,7 +124,7 @@ td {
 }
 
 .nav-tabs {
-    background-color: white !important;
+    /* background-color: white !important; */
 }
 #impairment-tabs > div.tab-content {
     padding: 0px !important;
@@ -131,9 +132,12 @@ td {
 }
 
 table {
-    font-size:12px !important;
+    font-size:12px;
 }
 /* #impairment-tabs > div.tab-content {
     padding: 0px !important;
     border: none !important;
 } */
+.row {
+    overflow-x: hidden;
+}

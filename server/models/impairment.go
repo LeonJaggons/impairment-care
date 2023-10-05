@@ -14,6 +14,7 @@ type Impairment struct {
 	Factors        pq.StringArray `json:"factors" gorm:"type:text[];column:factors"`
 	OperationCode  string         `json:"operationCode" gorm:"column:operation_code"`
 	ImpairmentUnit string         `json:"impairmentUnit" gorm:"column:impairment_unit"`
+	ValuesTable    string         `json:"valuesTable" gorm:"column:values_table"`
 }
 
 func (Impairment) TableName() string {

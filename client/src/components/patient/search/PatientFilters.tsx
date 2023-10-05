@@ -30,23 +30,30 @@ enum PatientFilterTypes {
 export const PatientFilters = () => {
     return (
         <div id={"patient-filters-container"}>
-            <div
+            <Stack
                 style={{
                     padding: 12,
-                    textAlign: "center",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                 }}
+                gap={2}
             >
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>
-                    Patient Filters
-                </p>
+                <div
+                    style={{
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>
+                        Patient Filters
+                    </p>
 
-                <Nav.Link style={{ display: "flex", alignItems: "center" }}>
-                    <MdRefresh size={16} />
-                </Nav.Link>
-            </div>
+                    <Nav.Link style={{ display: "flex", alignItems: "center" }}>
+                        <MdRefresh size={16} />
+                    </Nav.Link>
+                </div>
+                <Form.Control placeholder={"Search..."}></Form.Control>
+            </Stack>
             <div
                 style={{
                     borderBottom: "1px solid rgba(0,0,0,.05)",
@@ -122,12 +129,8 @@ const FilterSection = (props: {
                 style={{
                     borderBottom: "none",
                     borderTop: "1px solid rgba(0,0,0,.05)",
-                    // borderRight: "none",
-                    // borderLeft: "none",
-                    // border: "none",
                     paddingLeft: 12,
                     borderRadius: 0,
-                    // backgroundColor: "rgba(0, 0, 0, .01)",
                     backgroundColor: "white",
                     cursor: "pointer",
                     display: "flex",
@@ -205,7 +208,7 @@ const PatientFilter = (props: { label: string; type: PatientFilterTypes }) => {
                 style={{
                     margin: 0,
                     marginBottom: 4,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: 500,
                     color: "rgba(0,0,0,.9)",
                 }}
